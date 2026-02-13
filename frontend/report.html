@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Lost Item - Lost & Found</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --secondary: #0891b2;
+      --accent: #f59e0b;
+      --muted: #6b7280;
+      --background: #f8fafc;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--background);
+      color: #1f2937;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: white !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 0.75rem 0;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      padding: 8px;
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary);
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+
+    .nav-btn:hover {
+      color: var(--primary);
+    }
+
+    .nav-btn.active {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .btn-browse {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-browse:hover {
+      background-color: #d97706;
+      transform: translateY(-1px);
+    }
+
+    /* Main Content */
+    .main-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 1rem 3rem;
+    }
+
+    /* Header Section */
+    .page-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+    }
+
+    /* Progress Steps */
+    .progress-steps {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      position: relative;
+    }
+
+    .steps-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .progress-line {
+      position: absolute;
+      top: 24px;
+      left: 15%;
+      right: 15%;
+      height: 2px;
+      background-color: #e5e7eb;
+      z-index: 0;
+    }
+
+    .progress-line-fill {
+      position: absolute;
+      top: 24px;
+      left: 15%;
+      height: 2px;
+      background-color: var(--secondary);
+      z-index: 1;
+      transition: width 0.3s ease;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .step-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .step-circle.active {
+      background-color: var(--secondary);
+    }
+
+    .step-circle.inactive {
+      background-color: #e5e7eb;
+    }
+
+    .step-circle svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .step-circle.active svg {
+      color: white;
+    }
+
+    .step-circle.completed {
+      background-color: var(--secondary);
+    }
+
+    .step-circle.completed svg {
+      color: white;
+    }
+
+    .step-label.completed {
+      color: var(--secondary);
+    }
+
+    /* Form Card */
+    .form-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Upload Area */
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-area {
+      border: 3px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      margin-bottom: 2rem;
+    }
+
+    .upload-area:hover {
+      border-color: var(--secondary);
+      background-color: #ecfeff;
+    }
+
+    .upload-area.drag-over {
+      border-color: var(--secondary);
+      background-color: #ecfeff;
+      transform: scale(1.02);
+    }
+
+    .upload-icon-wrapper {
+      width: 64px;
+      height: 64px;
+      background-color: #cffafe;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+    }
+
+    .upload-icon-wrapper svg {
+      width: 32px;
+      height: 32px;
+      color: var(--secondary);
+    }
+
+    .upload-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .upload-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary-custom {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-primary-custom:hover {
+      background-color: #1e3a8a;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline-custom {
+      background-color: white;
+      color: #6b7280;
+      border: 2px solid #d1d5db;
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-outline-custom:hover {
+      border-color: var(--secondary);
+      color: var(--secondary);
+      background-color: #ecfeff;
+    }
+
+    /* Next Button */
+    .button-container {
+      margin-top: 2rem;
+    }
+
+    .btn-next {
+      width: 100%;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .btn-next:hover {
+      background-color: #d97706;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-next svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Item Details Styles */
+    .item-type-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .item-type-btn {
+      background-color: white;
+      color: #374151;
+      border: 2px solid #d1d5db;
+      padding: 0.875rem 1rem;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .item-type-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .item-type-btn.selected {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .color-btn {
+      background-color: white;
+      color: #374151;
+      border: 2px solid #d1d5db;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .color-btn:hover {
+      border-color: var(--secondary);
+      color: var(--secondary);
+    }
+
+    .color-btn.selected {
+      background-color: var(--secondary);
+      color: white;
+      border-color: var(--secondary);
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      resize: vertical;
+      transition: all 0.2s;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Location & Date Styles */
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+    }
+
+    .input-with-icon .form-input {
+      padding-left: 3rem;
+    }
+
+    .form-helper {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .btn-prev {
+      background-color: white;
+      color: #374151;
+      border: 2px solid #d1d5db;
+      padding: 0.875rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-prev:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-submit {
+      flex: 1;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.875rem 2rem;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-submit:hover {
+      background-color: #d97706;
+      transform: translateY(-1px);
+    }
+
+    /* Image Preview */
+    .image-preview {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .preview-image {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 12px;
+    }
+
+    .btn-remove {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 0.4rem 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-remove:hover {
+      background: #f3f4f6;
+      transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .form-card {
+        padding: 1.5rem;
+      }
+
+      .upload-area {
+        padding: 2rem 1rem;
+      }
+
+      .item-type-grid,
+      .color-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .upload-buttons {
+        flex-direction: column;
+      }
+
+      .btn-primary-custom,
+      .btn-outline-custom {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .brand-text {
+        display: none;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+      }
+
+      .progress-steps {
+        padding: 0 1rem;
+      }
+
+      .step-label {
+        font-size: 0.75rem;
+      }
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      padding: 0.5rem 0;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+      display: none;
+    }
+
+    .bottom-nav-items {
+      display: flex;
+      justify-content: space-around;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .bottom-nav-btn {
+      background: none;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.5rem 1rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .bottom-nav-btn.active {
+      color: var(--primary);
+    }
+
+    .bottom-nav-btn svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .bottom-nav-btn span {
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 991px) {
+      .bottom-nav {
+        display: block;
+      }
+
+      .main-container {
+        padding-bottom: 6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#" onclick="navigateTo('index.html')">
+        <div style="background: linear-gradient(to bottom right, var(--primary), var(--secondary));"
+          class="rounded-xl p-2 me-2">
+          <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" />
+            <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z" />
+            <circle cx="9" cy="12" r="1" />
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="15" cy="12" r="1" />
+          </svg>
+        </div>
+        <div class="d-none d-sm-block">
+          <div class="fw-bold text-primary mb-0">VIT Pune Lost & Found</div>
+          <small class="text-muted">Vishwakarma Institute of Technology</small>
+        </div>
+      </a>
+
+      <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-lg-none">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="finder.html">Find Item</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="report.html">Report Lost</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="found.html">Report Found</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="search.html">Browse Items</a>
+          </li>
+        </ul>
+        <div class="d-none d-lg-flex ms-auto">
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('index.html')">Home</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('finder.html')">Find Item</button>
+          <button class="btn btn-link fw-bold text-primary me-4" onclick="navigateTo('report.html')">Report
+            Lost</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('found.html')">Report
+            Found</button>
+          <button class="btn btn-accent" onclick="navigateTo('search.html')">Browse Items</button>
+        </div>
+      </div>
+
+
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">Report Lost Item</h1>
+      <p class="page-subtitle">Help us help you find your item</p>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="progress-steps">
+      <div class="steps-container">
+        <div class="progress-line"></div>
+        <div class="progress-line-fill" id="progress-bar" style="width: 33%;"></div>
+
+        <div class="step">
+          <div class="step-circle active" id="step-circle-1">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M7 16a4 4 0 0 1-.88-7.903A5 5 0 1 1 15.9 6L16 6a5 5 0 0 1 1 9.9M12 12v9m0-9l-3 3m3-3l3 3"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="step-label active" id="step-label-1">Upload Photo</div>
+        </div>
+
+        <div class="step">
+          <div class="step-circle inactive" id="step-circle-2">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" fill="none" stroke="currentColor" stroke-width="2" />
+            </svg>
+          </div>
+          <div class="step-label inactive" id="step-label-2">Item Details</div>
+        </div>
+
+        <div class="step">
+          <div class="step-circle inactive" id="step-circle-3">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+          </div>
+          <div class="step-label inactive" id="step-label-3">Location & Date</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <!-- Step 1: Upload Photo -->
+      <div id="step-1">
+        <h3 class="section-title">Upload Item Photo</h3>
+        <div id="photo-upload-area" class="upload-area" ondragover="handleDragOver(event)"
+          ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <div class="upload-icon-wrapper">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <rect x="3" y="7" width="18" height="12" rx="2" />
+              <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z" />
+              <circle cx="12" cy="13" r="3" fill="white" />
+            </svg>
+          </div>
+          <h4 class="upload-title">Add a photo of your lost item</h4>
+          <p class="upload-subtitle">This helps others identify your item more easily</p>
+
+          <div class="upload-buttons">
+            <button class="btn-primary-custom" onclick="document.getElementById('photo-input').click()">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="17 8 12 3 7 8" />
+                <line x1="12" y1="3" x2="12" y2="15" />
+              </svg>
+              Choose File
+            </button>
+            <button class="btn-outline-custom" onclick="openCamera()">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              Take Photo
+            </button>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" style="display: none;"
+            onchange="handlePhotoSelect(this)">
+        </div>
+
+        <div class="button-container">
+          <button class="btn-next" id="next-btn" onclick="goTonextStep()">
+            Next Step
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 12h14m-7-7l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Item Details -->
+      <div id="step-2" style="display: none;">
+        <h3 class="section-title">Item Type</h3>
+        <div class="item-type-grid">
+          <button class="item-type-btn" data-type="Electronics">Electronics</button>
+          <button class="item-type-btn" data-type="Bags">Bags</button>
+          <button class="item-type-btn" data-type="Keys">Keys</button>
+          <button class="item-type-btn" data-type="Personal Items">Personal Items</button>
+          <button class="item-type-btn" data-type="Clothing">Clothing</button>
+          <button class="item-type-btn" data-type="Accessories">Accessories</button>
+          <button class="item-type-btn" data-type="Books">Books</button>
+          <button class="item-type-btn" data-type="Other">Other</button>
+        </div>
+
+        <h3 class="section-title">Primary Color</h3>
+        <div class="color-grid">
+          <button class="color-btn" data-color="Black">Black</button>
+          <button class="color-btn" data-color="White">White</button>
+          <button class="color-btn" data-color="Gray">Gray</button>
+          <button class="color-btn" data-color="Red">Red</button>
+          <button class="color-btn" data-color="Blue">Blue</button>
+          <button class="color-btn" data-color="Green">Green</button>
+          <button class="color-btn" data-color="Yellow">Yellow</button>
+          <button class="color-btn" data-color="Brown">Brown</button>
+          <button class="color-btn" data-color="Pink">Pink</button>
+          <button class="color-btn" data-color="Purple">Purple</button>
+          <button class="color-btn" data-color="Orange">Orange</button>
+          <button class="color-btn" data-color="Multi">Multi</button>
+        </div>
+
+        <h3 class="section-title">Description</h3>
+        <textarea id="description" class="form-textarea" rows="4"
+          placeholder="Describe your item in detail (brand, model, unique features, etc.)"></textarea>
+
+        <div class="nav-buttons">
+          <button class="btn-prev" id="prev-btn" onclick="prevStep()">Previous</button>
+          <button class="btn-submit" onclick="goTonextStep()" id="step2-next">Next Step</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Location & Date -->
+      <div id="step-3" style="display: none;">
+        <h3 class="section-title">Last Known Location</h3>
+        <div class="input-with-icon" style="margin-bottom: 2rem;">
+          <svg class="input-icon" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+          </svg>
+          <input type="text" id="location" class="form-input"
+            placeholder="e.g., Library 2nd Floor, Cafeteria, Parking Lot B">
+        </div>
+
+        <h3 class="section-title">Date Lost</h3>
+        <input type="date" id="date-lost" class="form-input" style="margin-bottom: 2rem;">
+
+        <h3 class="section-title">Contact Email</h3>
+        <input type="email" id="email" class="form-input" placeholder="your.email@example.com">
+        <p class="form-helper">We'll notify you if someone finds a matching item</p>
+
+        <div class="nav-buttons">
+          <button class="btn-prev" onclick="prevStep()">Previous</button>
+          <button class="btn-submit" id="submit-btn" onclick="handleSubmit()">Submit Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="bottom-nav-btn" onclick="navigateTo('index.html')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+        </svg>
+        <span>Home</span>
+      </button>
+      <button class="bottom-nav-btn" onclick="navigateTo('search.html')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" />
+          <path d="m21 21-4.35-4.35" />
+        </svg>
+        <span>Search</span>
+      </button>
+      <button class="bottom-nav-btn" onclick="navigateTo('finder.html')">
+        <svg fill="currentColor" viewBox="0 0 24 24">
+          <rect x="3" y="7" width="18" height="12" rx="2" />
+          <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z" />
+          <circle cx="9" cy="13" r="1" fill="white" />
+          <circle cx="12" cy="13" r="1" fill="white" />
+          <circle cx="15" cy="13" r="1" fill="white" />
+        </svg>
+        <span>Find</span>
+      </button>
+      <button class="bottom-nav-btn active" onclick="navigateTo('report.html')">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" />
+          <line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round" />
+        </svg>
+        <span>Report</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    let currentStep = 1;
+    let selectedImage = null;
+    const formData = { itemType: '', color: '', location: '', date: '', email: '', description: '' };
+
+    // Function called by the file input onchange="handlePhotoSelect(this)"
+    function handlePhotoSelect(inputElement) {
+      console.log("File selection triggered");
+      const file = (inputElement.files && inputElement.files[0]) ? inputElement.files[0] : null;
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          selectedImage = e.target.result;
+          console.log("Image loaded successfully");
+          showImagePreview();
+          updateButtonStates();
+          analyzeUploadedImage(file);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Analyze uploaded image using Roboflow AI
+    async function analyzeUploadedImage(file) {
+      try {
+        console.log('🤖 Analyzing image with AI...');
+
+        // Show analyzing message
+        const uploadArea = document.getElementById('photo-upload-area');
+        const currentContent = uploadArea.innerHTML;
+
+        // Add analyzing indicator
+        const analyzingDiv = document.createElement('div');
+        analyzingDiv.id = 'ai-analyzing';
+        analyzingDiv.className = 'alert alert-info mt-2';
+        analyzingDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <span class="spinner-border spinner-border-sm me-2"></span>
+                    <span>AI is analyzing your image...</span>
+                </div>
+            `;
+        uploadArea.appendChild(analyzingDiv);
+
+        // Call API
+        const result = await LostFoundAPI.analyzeImage(file);
+
+        console.log('✅ AI Analysis Result:', result);
+
+        // Store AI analysis for use in form submission
+        localStorage.setItem('aiAnalysis', JSON.stringify(result.analysis));
+        localStorage.setItem('uploadedImage', result.filepath);
+
+        // Remove analyzing indicator
+        const analyzing = document.getElementById('ai-analyzing');
+        if (analyzing) analyzing.remove();
+
+        // Show detected objects to user
+        if (result.analysis && result.analysis.detected_objects && result.analysis.detected_objects.length > 0) {
+          const detectedItems = result.analysis.detected_objects
+            .map(obj => `${obj.class} (${Math.round(obj.confidence * 100)}%)`)
+            .join(', ');
+
+          console.log('Detected objects:', detectedItems);
+
+          // Add success message
+          const successDiv = document.createElement('div');
+          successDiv.className = 'alert alert-success mt-2';
+          successDiv.innerHTML = `
+                    <strong>✅ AI Detection Complete!</strong><br>
+                    <small>Detected: ${detectedItems}</small>
+                `;
+          uploadArea.appendChild(successDiv);
+
+          // Auto-remove after 5 seconds
+          setTimeout(() => successDiv.remove(), 5000);
+        }
+
+      } catch (error) {
+        console.error('❌ AI analysis failed:', error);
+
+        // Remove analyzing indicator
+        const analyzing = document.getElementById('ai-analyzing');
+        if (analyzing) analyzing.remove();
+
+        // Show error (but don't block form submission)
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-warning mt-2';
+        errorDiv.innerHTML = `
+                <small>⚠️ AI analysis failed, but you can still submit the form.</small>
+            `;
+        document.getElementById('photo-upload-area').appendChild(errorDiv);
+
+        // Auto-remove after 3 seconds
+        setTimeout(() => errorDiv.remove(), 3000);
+      }
+    }
+
+
+    function showImagePreview() {
+      const uploadArea = document.getElementById('photo-upload-area');
+      uploadArea.innerHTML = `
+            <div class="image-preview">
+                <img src="${selectedImage}" class="preview-image" style="max-height: 200px; border-radius: 10px; margin-bottom: 10px;">
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-outline-danger" onclick="clearImage()">Remove & Change</button>
+                </div>
+            </div>
+        `;
+    }
+
+    function clearImage() {
+      console.log("Image cleared");
+      selectedImage = null;
+      const uploadArea = document.getElementById('photo-upload-area');
+      uploadArea.innerHTML = uploadArea.dataset.original;
+      updateButtonStates();
+    }
+
+    function goTonextStep() {
+      console.log("Next Step clicked. Current step:", currentStep);
+
+      // Prevent moving forward if data is missing
+      if (currentStep === 1 && !selectedImage) {
+        alert("Please upload an image first.");
+        return;
+      }
+
+      // Hide current step
+      const currentEl = document.getElementById(`step-${currentStep}`);
+      if (currentEl) currentEl.style.display = 'none';
+
+      // Increment
+      currentStep++;
+
+      // Show next step
+      const nextEl = document.getElementById(`step-${currentStep}`);
+      if (nextEl) {
+        nextEl.style.display = 'block';
+        console.log("Showing step:", currentStep);
+      }
+
+      updateProgress();
+      updateButtonStates();
+      window.scrollTo(0, 0);
+    }
+
+    function prevStep() {
+      const currentEl = document.getElementById(`step-${currentStep}`);
+      if (currentEl) currentEl.style.display = 'none';
+
+      currentStep--;
+
+      const prevEl = document.getElementById(`step-${currentStep}`);
+      if (prevEl) prevEl.style.display = 'block';
+
+      updateProgress();
+      updateButtonStates();
+    }
+
+    function updateProgress() {
+      // Progress calculation for 3 steps: step1=0%, step2=50%, step3=100%
+      const progress = currentStep === 1 ? 0 : currentStep === 2 ? 50 : 100;
+      const progressBar = document.getElementById('progress-bar');
+      if (progressBar) progressBar.style.width = `${progress}%`;
+
+      for (let i = 1; i <= 3; i++) {
+        const circle = document.getElementById(`step-circle-${i}`);
+        const label = document.getElementById(`step-label-${i}`);
+        if (circle) {
+          circle.className = i <= currentStep ? 'step-circle active' : 'step-circle inactive';
+        }
+        if (label) {
+          label.className = i <= currentStep ? 'step-label active' : 'step-label inactive';
+        }
+      }
+    }
+
+    function updateButtonStates() {
+      // Step 1 Button
+      const nextBtn1 = document.getElementById('next-btn');
+      if (nextBtn1) {
+        nextBtn1.disabled = !selectedImage;
+        console.log("Step 1 button disabled state:", nextBtn1.disabled);
+      }
+
+      // Step 2 Button
+      const nextBtn2 = document.getElementById('step2-next');
+      if (nextBtn2) {
+        nextBtn2.disabled = (!formData.itemType || !formData.color);
+      }
+
+      // Step 3 Button
+      const submitBtn = document.getElementById('submit-btn');
+      if (submitBtn) {
+        const loc = document.getElementById('location').value;
+        const date = document.getElementById('date-lost').value;
+        const email = document.getElementById('email').value;
+        submitBtn.disabled = (!loc || !date || !email);
+      }
+    }
+
+    async function handleSubmit() {
+      // Get the submit button
+      const submitBtn = document.getElementById('submit-btn');
+      const originalBtnText = submitBtn.innerHTML;
+
+      // Collect all form data in backend API format
+      const itemData = {
+        itemName: formData.itemType || 'Lost Item',
+        category: formData.itemType || 'other',
+        color: formData.color || '',
+        location: document.getElementById('location').value,
+        date: document.getElementById('date-lost').value,
+        description: document.getElementById('description')?.value || '',
+        contactInfo: {
+          name: 'VIT Student', // Default name (you can add a name field later)
+          email: document.getElementById('email').value,
+          phone: '' // Optional phone field
+        }
+      };
+
+      // Add AI analysis if available from image upload
+      const aiAnalysis = localStorage.getItem('aiAnalysis');
+      if (aiAnalysis) {
+        try {
+          itemData.aiAnalysis = JSON.parse(aiAnalysis);
+        } catch (e) {
+          console.error('Error parsing AI analysis:', e);
+        }
+      }
+
+      // Add uploaded image path if available
+      const imagePath = localStorage.getItem('uploadedImage');
+      if (imagePath) {
+        itemData.image = imagePath;
+      }
+
+      try {
+        // Disable button and show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
+
+        // Submit to backend API
+        console.log('Submitting lost item:', itemData);
+        const result = await LostFoundAPI.reportLostItem(itemData);
+
+        console.log('Item reported successfully:', result);
+
+        // Also save to localStorage for offline viewing (backup)
+        const lostItems = JSON.parse(localStorage.getItem('lostItems') || '[]');
+        lostItems.push(result.item);
+        localStorage.setItem('lostItems', JSON.stringify(lostItems));
+
+        // Show success message
+        alert('✅ Lost item reported successfully!');
+
+        // Try to find matches automatically
+        try {
+          console.log('Searching for matches...');
+          const matches = await LostFoundAPI.matchItems({
+            category: itemData.category,
+            color: itemData.color,
+            aiAnalysis: itemData.aiAnalysis
+          });
+
+          console.log('Matches found:', matches);
+
+          if (matches.matchCount > 0) {
+            alert(`🎉 Great news! Found ${matches.matchCount} potential match(es)!\n\nRedirecting you to view them...`);
+            localStorage.setItem('matches', JSON.stringify(matches.matches));
+            navigateTo('search.html?tab=found&matches=true');
+          } else {
+            alert('Item reported successfully!\n\nNo matches found yet, but we\'ll keep looking.');
+            navigateTo('search.html?tab=found');
+          }
+        } catch (matchError) {
+          console.error('Error finding matches:', matchError);
+          // Even if matching fails, the item is reported
+          alert('Item reported successfully!\n\nRedirecting to browse found items...');
+          navigateTo('search.html?tab=found');
+        }
+
+      } catch (error) {
+        console.error('Error submitting lost item:', error);
+
+        // Show detailed error message
+        let errorMessage = 'Failed to submit report.\n\n';
+
+        if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+          errorMessage += 'Could not connect to server. Please check:\n';
+          errorMessage += '1. Backend server is running (http://localhost:5000)\n';
+          errorMessage += '2. Your internet connection\n';
+          errorMessage += '3. Try again in a moment';
+        } else {
+          errorMessage += 'Error: ' + error.message;
+        }
+
+        alert(errorMessage);
+
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("Page Loaded - Initializing");
+
+      // Save the original empty state of the upload area
+      const uploadArea = document.getElementById('photo-upload-area');
+      if (uploadArea) {
+        uploadArea.dataset.original = uploadArea.innerHTML;
+      }
+
+      // Setup Item Type Button Listeners
+      document.querySelectorAll('.item-type-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.item-type-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          formData.itemType = this.getAttribute('data-type');
+          updateButtonStates();
+        });
+      });
+
+      // Setup Color Button Listeners
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
+          this.classList.add('selected');
+          formData.color = this.getAttribute('data-color');
+          updateButtonStates();
+        });
+      });
+
+      // Input listeners for text fields in Step 3
+      const inputs = ['location', 'date-lost', 'email'];
+      inputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener('input', function () {
+            if (id === 'location') formData.location = this.value;
+            if (id === 'date-lost') formData.date = this.value;
+            if (id === 'email') formData.email = this.value;
+            updateButtonStates();
+          });
+        }
+      });
+    });
+
+    function openCamera() {
+      document.getElementById('photo-input').click();
+    }
+
+    function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+    function handleDrop(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        // Manually trigger handlePhotoSelect with a mock input object
+        handlePhotoSelect({ files: e.dataTransfer.files });
+      }
+    }
+  </script>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api_client.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found - AI-Powered Recovery</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#" onclick="navigateTo('index.html')">
+        <div style="background: linear-gradient(to bottom right, var(--primary), var(--secondary));" class="rounded-xl p-2 me-2">
+          <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+            <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
+            <circle cx="9" cy="12" r="1"/>
+            <circle cx="12" cy="12" r="1"/>
+            <circle cx="15" cy="12" r="1"/>
+          </svg>
+        </div>
+        <div class="d-none d-sm-block">
+          <div class="fw-bold text-primary mb-0">VIT Pune Lost & Found</div>
+          <small class="text-muted">Vishwakarma Institute of Technology</small>
+        </div>
+      </a>
+
+      <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-lg-none">
+          <li class="nav-item">
+            <a class="nav-link active" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="finder.html">Find Item</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="report.html">Report Lost</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="found.html">Report Found</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="search.html">Browse Items</a>
+          </li>
+        </ul>
+        <div class="d-none d-lg-flex ms-auto">
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('index.html')">Home</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('finder.html')">Find Item</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('report.html')">Report Lost</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('found.html')">Report Found</button>
+          <button class="btn btn-accent" onclick="navigateTo('search.html')">Browse Items</button>
+        </div>
+      </div>
+
+      
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-primary via-primary/90 to-secondary text-white py-5" style="padding-top: 120px;">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <div class="bg-white/20 backdrop-blur-sm d-inline-block px-4 py-2 rounded-pill mb-4">
+            <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <span>Powered by AI Technology</span>
+          </div>
+
+          <h1 class="display-4 fw-bold mb-4">Lost Something at VIT?<br>Let AI Help You Find It.</h1>
+
+          <p class="lead mb-5" style="max-width: 600px; margin: 0 auto;">
+            Advanced AI-powered platform for Vishwakarma Institute of Technology using YOLO object detection
+            to reunite students and staff with their lost belongings quickly and efficiently.
+          </p>
+
+          <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+            <button class="btn btn-accent btn-lg px-5 py-3" onclick="navigateTo('finder.html')">
+              <svg class="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+                <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
+                <circle cx="9" cy="12" r="1"/>
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="15" cy="12" r="1"/>
+              </svg>
+              Find an Item
+            </button>
+            <button class="btn btn-outline btn-lg px-5 py-3 text-white border-white" onclick="navigateTo('report.html')">
+              <svg class="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+              Report Lost Item
+            </button>
+            <button class="btn btn-outline btn-lg px-5 py-3 text-white border-white" onclick="navigateTo('found.html')">
+              <svg class="me-2" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V21H19V9Z"/>
+              </svg>
+              Report Found Item
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-6 col-md-3 text-center">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-xl p-3 d-inline-block mb-3">
+            <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M16 4a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4h8zM8 6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8z"/>
+              <path d="M12 8a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+            </svg>
+          </div>
+          <div class="h4 fw-bold text-primary mb-1">5,000+</div>
+          <div class="text-muted">Active Users</div>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-xl p-3 d-inline-block mb-3">
+            <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="h4 fw-bold text-primary mb-1">12,500+</div>
+          <div class="text-muted">Items Found</div>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-xl p-3 d-inline-block mb-3">
+            <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <div class="h4 fw-bold text-primary mb-1">95%</div>
+          <div class="text-muted">Success Rate</div>
+        </div>
+        <div class="col-6 col-md-3 text-center">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-xl p-3 d-inline-block mb-3">
+            <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="h4 fw-bold text-primary mb-1">24/7</div>
+          <div class="text-muted">Support</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-5 bg-background">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold text-foreground mb-3">Powerful AI Features</h2>
+        <p class="lead text-muted-foreground" style="max-width: 600px; margin: 0 auto;">
+          Leveraging cutting-edge technology to make finding lost items faster and easier than ever before
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="bg-white rounded-3 p-4 shadow-lg text-center h-100">
+            <div style="background: linear-gradient(to bottom right, #3b82f6, #2563eb);" class="rounded-xl p-3 d-inline-block mb-3">
+              <svg class="text-white" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+                <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
+                <circle cx="9" cy="12" r="1"/>
+                <circle cx="12" cy="12" r="1"/>
+                <circle cx="15" cy="12" r="1"/>
+              </svg>
+            </div>
+            <h3 class="h5 fw-semibold mb-2">Image-based Search</h3>
+            <p class="text-muted">Upload or capture photos to find lost items instantly</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="bg-white rounded-3 p-4 shadow-lg text-center h-100">
+            <div style="background: linear-gradient(to bottom right, #14b8a6, #0d9488);" class="rounded-xl p-3 d-inline-block mb-3">
+              <svg class="text-white" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <h3 class="h5 fw-semibold mb-2">AI Object Detection</h3>
+            <p class="text-muted">Advanced YOLO-powered recognition technology</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="bg-white rounded-3 p-4 shadow-lg text-center h-100">
+            <div style="background: linear-gradient(to bottom right, #f97316, #ea580c);" class="rounded-xl p-3 d-inline-block mb-3">
+              <svg class="text-white" width="28" height="28" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <h3 class="h5 fw-semibold mb-2">Color-based Matching</h3>
+            <p class="text-muted">Intelligent color analysis for better matches</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="bg-white rounded-3 p-4 shadow-lg text-center h-100">
+            <div style="background: linear-gradient(to bottom right, #a855f7, #9333ea);" class="rounded-xl p-3 d-inline-block mb-3">
+              <svg class="text-white" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+              </svg>
+            </div>
+            <h3 class="h5 fw-semibold mb-2">Smart Filters</h3>
+            <p class="text-muted">Refine searches by category, location, and date</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="py-5 bg-white">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+        <p class="lead text-muted-foreground">Simple 3-step process to find or report lost items</p>
+      </div>
+
+      <div class="row g-4 justify-content-center">
+        <div class="col-12 col-md-4 text-center position-relative">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-full p-4 d-inline-block mb-3">
+            <svg class="text-white" width="40" height="40" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+              <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
+              <circle cx="9" cy="12" r="1"/>
+              <circle cx="12" cy="12" r="1"/>
+              <circle cx="15" cy="12" r="1"/>
+            </svg>
+          </div>
+          <div class="bg-white rounded-circle d-inline-block p-2 position-absolute top-0 start-50 translate-middle" style="width: 48px; height: 48px; border: 4px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <span class="fw-bold text-primary">1</span>
+          </div>
+          <h3 class="h5 fw-semibold mb-2">Upload or Capture</h3>
+          <p class="text-muted">Take a photo of your lost item or upload an existing image</p>
+        </div>
+        <div class="col-12 col-md-4 text-center position-relative">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-full p-4 d-inline-block mb-3">
+            <svg class="text-white" width="40" height="40" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="bg-white rounded-circle d-inline-block p-2 position-absolute top-0 start-50 translate-middle" style="width: 48px; height: 48px; border: 4px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <span class="fw-bold text-primary">2</span>
+          </div>
+          <h3 class="h5 fw-semibold mb-2">AI Analysis</h3>
+          <p class="text-muted">Our AI detects objects, colors, and key features automatically</p>
+        </div>
+        <div class="col-12 col-md-4 text-center position-relative">
+          <div class="bg-gradient-to-br from-primary to-secondary rounded-full p-4 d-inline-block mb-3">
+            <svg class="text-white" width="40" height="40" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="bg-white rounded-circle d-inline-block p-2 position-absolute top-0 start-50 translate-middle" style="width: 48px; height: 48px; border: 4px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <span class="fw-bold text-primary">3</span>
+          </div>
+          <h3 class="h5 fw-semibold mb-2">Get Results</h3>
+          <p class="text-muted">Browse matched items and connect with finders securely</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-5 bg-gradient-to-br from-primary via-primary/90 to-secondary">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 text-center">
+          <svg class="text-white mb-4" width="64" height="64" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+          <h2 class="display-5 fw-bold text-white mb-3">Safe, Secure, and Reliable</h2>
+          <p class="lead text-white/90 mb-4">
+            Your privacy and security are our top priorities. All data is encrypted and handled with care.
+          </p>
+          <button class="btn btn-accent btn-lg px-5 py-3" onclick="navigateTo('finder.html')">
+            Get Started Now
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="navbar fixed-bottom d-lg-none bg-white border-top shadow-lg">
+    <div class="container-fluid">
+      <div class="row w-100 g-0">
+        <div class="col text-center">
+          <button class="btn btn-link text-muted-foreground p-2 d-flex flex-column align-items-center" onclick="navigateTo('index.html')">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9,22 9,12 15,12 15,22"/>
+            </svg>
+            <small>Home</small>
+          </button>
+        </div>
+        <div class="col text-center">
+          <button class="btn btn-link text-muted-foreground p-2 d-flex flex-column align-items-center" onclick="navigateTo('search.html')">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <small>Search</small>
+          </button>
+        </div>
+        <div class="col text-center">
+          <button class="btn btn-link text-primary p-2 d-flex flex-column align-items-center" onclick="navigateTo('finder.html')">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+              <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
+              <circle cx="9" cy="12" r="1"/>
+              <circle cx="12" cy="12" r="1"/>
+              <circle cx="15" cy="12" r="1"/>
+            </svg>
+            <small>Find</small>
+          </button>
+        </div>
+        <div class="col text-center">
+          <button class="btn btn-link text-muted-foreground p-2 d-flex flex-column align-items-center" onclick="navigateTo('report.html')">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            <small>Report</small>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api_client.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

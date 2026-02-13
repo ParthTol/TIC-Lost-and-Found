@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report Found Item - Lost & Found</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    :root {
+      --primary: #1e40af;
+      --secondary: #0891b2;
+      --accent: #f59e0b;
+      --muted: #6b7280;
+      --background: #f8fafc;
+      --card-bg: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--background);
+      color: #1f2937;
+    }
+
+    /* Navigation */
+    .navbar {
+      background: white !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 0.75rem 0;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 12px;
+      padding: 8px;
+      margin-right: 10px;
+      display: flex;
+    }
+
+    /* Main Content */
+    .main-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 3rem 1rem 3rem;
+    }
+
+    /* Header Section */
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 1.1rem;
+      color: var(--muted);
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .form-section-title svg {
+      margin-right: 0.5rem;
+      color: var(--secondary);
+      width: 20px;
+      height: 20px;
+    }
+
+    /* Image Upload */
+    .upload-area {
+      border: 3px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      transition: all 0.3s;
+      cursor: pointer;
+      background: #f9fafb;
+      margin-bottom: 2rem;
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary);
+      background: #f0f9ff;
+    }
+
+    .upload-area.dragover {
+      border-color: var(--accent);
+      background: #fffbeb;
+    }
+
+    .upload-icon {
+      width: 64px;
+      height: 64px;
+      color: #94a3b8;
+      margin: 0 auto 1.5rem;
+    }
+
+    .upload-title {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-text {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .image-preview {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    /* Form Inputs */
+    .form-label {
+      font-weight: 500;
+      color: #374151;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
+    }
+
+    .form-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #d97706;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: #f3f4f6;
+      border: 1px solid #d1d5db;
+      color: #374151;
+      border-radius: 8px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background-color: #e5e7eb;
+    }
+
+    /* Success Modal */
+    .success-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      color: white;
+    }
+
+    .form-control.is-invalid {
+      border-color: #dc3545;
+    }
+
+    .invalid-feedback {
+      display: none;
+      color: #dc3545;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    .form-control.is-invalid + .invalid-feedback {
+      display: block;
+    }
+  </style>
+</head>
+<body style="padding-top: 0%;">
+  <!-- Top Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="#" onclick="navigateTo('index.html')">
+        <div style="background: linear-gradient(to bottom right, var(--primary), var(--secondary));" class="brand-icon">
+          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
+            <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
+            <circle cx="9" cy="12" r="1"/>
+            <circle cx="12" cy="12" r="1"/>
+            <circle cx="15" cy="12" r="1"/>
+          </svg>
+        </div>
+        <div class="d-none d-sm-block">
+          <div class="fw-bold text-primary mb-0">VIT Pune Lost & Found</div>
+          <small class="text-muted">Vishwakarma Institute of Technology</small>
+        </div>
+      </a>
+
+      <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-lg-none">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="finder.html">Find Item</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="report.html">Report Lost</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="found.html">Report Found</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="search.html">Browse Items</a>
+          </li>
+        </ul>
+        <div class="d-none d-lg-flex ms-auto">
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('index.html')">Home</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('finder.html')">Find Item</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('report.html')">Report Lost</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('found.html')">Report Found</button>
+          <button class="btn btn-accent" onclick="navigateTo('search.html')">Browse Items</button>
+        </div>
+      </div>
+
+     
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- Header -->
+    <div class="page-header">
+      <h1 class="page-title">Report Found Item</h1>
+      <p class="page-subtitle">Help reunite lost belongings with their owners</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+      <form id="found-item-form">
+        <!-- Image Upload -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM4 7v10h16V7H4zm8 2l5 4H7l5-4z"/>
+            </svg>
+            Item Image
+          </h3>
+          <div class="upload-area" id="upload-area">
+            <svg class="upload-icon" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+            </svg>
+            <div class="upload-title">Upload Item Photo</div>
+            <div class="upload-text">Drag & drop or click to select an image</div>
+            <input type="file" id="image-input" accept="image/*" style="display: none;">
+          </div>
+          <img id="image-preview" class="image-preview" alt="Image Preview">
+        </div>
+
+        <!-- Item Details -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z"/>
+            </svg>
+            Item Details
+          </h3>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="item-name" class="form-label">Item Name *</label>
+              <input type="text" class="form-control" id="item-name" required>
+              <div class="invalid-feedback">Please provide an item name.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="category" class="form-label">Category *</label>
+              <select class="form-select" id="category" required>
+                <option value="">Select Category</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Bags">Bags & Backpacks</option>
+                <option value="Keys">Keys</option>
+                <option value="Personal">Personal Items</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="invalid-feedback">Please select a category.</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="color" class="form-label">Primary Color</label>
+              <select class="form-select" id="color">
+                <option value="">Select Color</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Blue">Blue</option>
+                <option value="Red">Red</option>
+                <option value="Green">Green</option>
+                <option value="Yellow">Yellow</option>
+                <option value="Brown">Brown</option>
+                <option value="Gray">Gray</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Item Description</label>
+            <textarea class="form-control" id="description" rows="3" placeholder="Describe the item in detail..."></textarea>
+          </div>
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="use-ai">
+            <label class="form-check-label" for="use-ai">
+              Use AI to auto-generate description from image
+            </label>
+          </div>
+        </div>
+
+        <!-- Found Location -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12,2C8.13,2 5,5.13 5,9c0,5.25 7,13 7,13s7-7.75 7-13C19,5.13 15.87,2 12,2z M12,11.5c-1.38,0 -2.5,-1.12 -2.5,-2.5s1.12,-2.5 2.5,-2.5s2.5,1.12 2.5,2.5S13.38,11.5 12,11.5z"/>
+            </svg>
+            Found Location
+          </h3>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="location" class="form-label">Location Found *</label>
+              <input type="text" class="form-control" id="location" placeholder="e.g., Library - 2nd Floor" required>
+              <div class="invalid-feedback">Please provide the location where the item was found.</div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="date-found" class="form-label">Date Found *</label>
+              <input type="date" class="form-control" id="date-found" required>
+              <div class="invalid-feedback">Please select the date the item was found.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Finder Contact -->
+        <div class="form-section">
+          <h3 class="form-section-title">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V21H19V9Z"/>
+            </svg>
+            Your Contact Information
+          </h3>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="finder-name" class="form-label">Your Name (Optional)</label>
+              <input type="text" class="form-control" id="finder-name">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="contact" class="form-label">Phone Number or Email *</label>
+              <input type="text" class="form-control" id="contact" placeholder="e.g., +1-234-567-8900 or email@example.com" required>
+              <div class="invalid-feedback">Please provide a contact method.</div>
+            </div>
+          </div>
+          <p class="form-text">Your contact details will only be shared with verified claimants.</p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex gap-3 justify-content-end">
+          <button type="button" class="btn btn-secondary" onclick="navigateTo('index.html')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Found Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div class="success-modal" id="success-modal">
+    <div class="success-card">
+      <div class="success-icon">
+        <svg fill="currentColor" viewBox="0 0 24 24">
+          <path d="M9,20.42L2.79,14.21L5.62,11.38L9,14.77L18.88,4.88L21.71,7.71L9,20.42Z"/>
+        </svg>
+      </div>
+      <h3 class="mb-3">Thank you!</h3>
+      <p class="text-muted mb-4">The found item has been successfully listed.</p>
+      <button class="btn btn-primary" onclick="navigateTo('search.html')">Browse Items</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    // Image upload functionality
+    const uploadArea = document.getElementById('upload-area');
+    const imageInput = document.getElementById('image-input');
+    const imagePreview = document.getElementById('image-preview');
+
+    uploadArea.addEventListener('click', () => imageInput.click());
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        handleFileSelect(file);
+      }
+    });
+
+    imageInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleFileSelect(file);
+    });
+
+    function handleFileSelect(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = 'block';
+        uploadArea.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Form submission
+    document.getElementById('found-item-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Basic validation
+      const requiredFields = ['item-name', 'category', 'location', 'date-found', 'contact'];
+      let isValid = true;
+      requiredFields.forEach(field => {
+        const element = document.getElementById(field);
+        if (!element.value.trim()) {
+          element.classList.add('is-invalid');
+          isValid = false;
+        } else {
+          element.classList.remove('is-invalid');
+        }
+      });
+
+      if (!isValid) return;
+
+      // Show loading
+      const submitBtn = document.querySelector('button[type="submit"]');
+      const originalText = submitBtn.textContent;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...';
+
+      // Simulate processing
+      setTimeout(() => {
+        // Collect form data
+        const formData = {
+          id: Date.now().toString(),
+          name: document.getElementById('item-name').value,
+          category: document.getElementById('category').value,
+          color: document.getElementById('color').value,
+          description: document.getElementById('description').value,
+          location: document.getElementById('location').value,
+          date: document.getElementById('date-found').value,
+          contact: document.getElementById('contact').value,
+          finderName: document.getElementById('finder-name').value,
+          image: imagePreview.src || '',
+          type: 'found',
+          confidence: Math.floor(Math.random() * 20) + 80 // Mock AI confidence
+        };
+
+        // Save to localStorage
+        const foundItems = JSON.parse(localStorage.getItem('foundItems') || '[]');
+        foundItems.push(formData);
+        localStorage.setItem('foundItems', JSON.stringify(foundItems));
+
+        // Reset button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+
+        // Show success modal
+        document.getElementById('success-modal').style.display = 'flex';
+      }, 1500);
+    });
+
+    // Close modal on click outside
+    document.getElementById('success-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'success-modal') {
+        document.getElementById('success-modal').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html></content>
+<parameter name="filePath">e:\TIC project LostAndFound\frontend\found.html

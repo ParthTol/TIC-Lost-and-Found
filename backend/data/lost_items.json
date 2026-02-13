@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "itemName": "Blue Bottle",
+    "category": "bottle",
+    "color": "blue",
+    "location": "Library",
+    "date": "2024-02-06",
+    "description": "",
+    "contactInfo": {
+      "name": "Test User",
+      "email": "test@vit.edu",
+      "phone": "9999999999"
+    },
+    "image": "",
+    "status": "active",
+    "reportedAt": "2026-02-12T00:34:27.421280",
+    "aiAnalysis": {}
+  },
+  {
+    "id": 2,
+    "itemName": "Blue Bottle",
+    "category": "bottle",
+    "color": "blue",
+    "location": "Library",
+    "date": "2024-02-06",
+    "description": "",
+    "contactInfo": {
+      "name": "Test User",
+      "email": "test@vit.edu",
+      "phone": "9999999999"
+    },
+    "image": "",
+    "status": "active",
+    "reportedAt": "2026-02-12T00:35:17.180626",
+    "aiAnalysis": {}
+  }
+]

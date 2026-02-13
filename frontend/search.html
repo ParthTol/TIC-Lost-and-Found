@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results - Lost & Found</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <style>
+    .tab-btn {
+      background: transparent;
+      color: #6b7280;
+      border: none;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+      background: rgba(30, 58, 138, 0.05);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(to bottom right, var(--primary), var(--secondary));
+      color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab-btn svg {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .tab-btn.active .badge {
+      background: rgba(255, 255, 255, 0.3) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#" onclick="navigateTo('index.html')">
+        <div style="background: linear-gradient(to bottom right, var(--primary), var(--secondary));"
+          class="rounded-xl p-2 me-2">
+          <svg class="text-white" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" />
+            <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z" />
+            <circle cx="9" cy="12" r="1" />
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="15" cy="12" r="1" />
+          </svg>
+        </div>
+        <div class="d-none d-sm-block">
+          <div class="fw-bold text-primary mb-0">VIT Pune Lost & Found</div>
+          <small class="text-muted">Vishwakarma Institute of Technology</small>
+        </div>
+      </a>
+
+      <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="collapse"
+        data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto d-lg-none">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="finder.html">Find Item</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="report.html">Report Lost</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="found.html">Report Found</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="search.html">Browse Items</a>
+          </li>
+        </ul>
+        <div class="d-none d-lg-flex ms-auto">
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('index.html')">Home</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('finder.html')">Find Item</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('report.html')">Report
+            Lost</button>
+          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('found.html')">Report
+            Found</button>
+          <button class="btn btn-accent" onclick="navigateTo('search.html')">Browse Items</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container py-5" style="padding-top: 120px; padding-bottom: 120px;">
+    <!-- Header -->
+    <div class="mb-4">
+      <h1 class="display-5 fw-bold text-foreground mb-2">Browse Items</h1>
+      <p class="lead text-muted-foreground" id="tab-description">Browse found items reported by others (for people who
+        lost something)</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-3 shadow-sm p-2 mb-4">
+      <div class="d-flex gap-2">
+        <button class="btn flex-fill py-3 tab-btn active" id="found-tab" onclick="switchTab('found')">
+          <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Found Items
+          <span class="badge bg-primary ms-2" id="found-count">0</span>
+        </button>
+        <button class="btn flex-fill py-3 tab-btn" id="lost-tab" onclick="switchTab('lost')">
+          <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          Lost Items
+          <span class="badge bg-secondary ms-2" id="lost-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Count -->
+    <div class="mb-3">
+      <p class="text-muted">Showing <span id="results-count" class="fw-semibold text-primary">0</span> items</p>
+    </div>
+
+    <!-- Search and Filter Bar -->
+    <div class="bg-white rounded-3 shadow-md p-4 mb-4">
+      <div class="row g-3">
+        <div class="col-12 col-md-6">
+          <div class="position-relative">
+            <svg class="position-absolute top-50 start-0 translate-middle-y ms-3" width="20" height="20" fill="none"
+              stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <input type="text" id="search-input" class="form-control form-input ps-5 py-3"
+              placeholder="Search by item name or location...">
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <button class="btn btn-outline btn-lg w-100 border-2" onclick="toggleFilters()">
+            <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+              viewBox="0 0 24 24">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+            </svg>
+            Filters
+            <span class="badge bg-accent text-white ms-2" id="active-filters-badge" style="display: none;">Active</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Panel -->
+      <div id="filter-panel" class="mt-4 pt-4 border-top" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h5 class="mb-0">Filters</h5>
+          <button class="btn btn-sm btn-link text-accent" onclick="clearFilters()">Clear All</button>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold">Category</label>
+            <select id="category-filter" class="form-select form-input">
+              <option value="all">All Categories</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Bags">Bags</option>
+              <option value="Keys">Keys</option>
+              <option value="Personal Items">Personal Items</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold">Color</label>
+            <select id="color-filter" class="form-select form-input">
+              <option value="all">All Colors</option>
+              <option value="Black">Black</option>
+              <option value="Blue">Blue</option>
+              <option value="Red">Red</option>
+              <option value="Gray">Gray</option>
+              <option value="Silver">Silver</option>
+              <option value="Brown">Brown</option>
+              <option value="White">White</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results Grid -->
+    <div class="row g-4" id="results-grid">
+      <!-- Item 1 -->
+      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Black Laptop" data-category="Electronics"
+        data-color="Black" data-location="Library - 2nd Floor">
+        <div class="bg-white rounded-4 shadow-lg overflow-hidden h-100 transition-all"
+          style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'"
+          onmouseout="this.style.transform='translateY(0)'">
+          <div class="position-relative">
+            <img src="https://images.pexels.com/photos/33125275/pexels-photo-33125275.jpeg" class="w-100"
+              style="height: 220px; object-fit: cover;" alt="Black Laptop">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge text-white fw-semibold px-3 py-2"
+                style="background-color: #10b981; border-radius: 20px; font-size: 0.875rem;">90% Match</span>
+            </div>
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-white text-dark fw-semibold px-3 py-2"
+                style="border-radius: 20px; font-size: 0.875rem;">Electronics</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-semibold mb-3">Black Laptop</h5>
+            <div class="mb-3">
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                Library - 2nd Floor
+              </div>
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Dec 15, 2025
+              </div>
+              <div class="d-flex align-items-center text-muted small">
+                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Color: Black
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" onclick="viewItemDetails('Black Backpack')">
+              <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 2 -->
+      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="iPhone 15 Pro" data-category="Electronics"
+        data-color="Blue" data-location="Cafeteria">
+        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
+          <div class="position-relative">
+            <img
+              src="https://images.unsplash.com/photo-1741061963569-9d0ef54d10d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
+              class="w-100" style="height: 250px; object-fit: cover;" alt="iPhone 15 Pro">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-warning text-dark">88% Match</span>
+            </div>
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-white text-dark">Electronics</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-semibold mb-3">iPhone 15 Pro</h5>
+            <div class="mb-3">
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Cafeteria
+              </div>
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Dec 16, 2025
+              </div>
+              <div class="d-flex align-items-center text-muted small">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Color: Blue
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" onclick="viewItemDetails('iPhone 15 Pro')">
+              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 3 -->
+      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Key Set with Brown Leather Tag" data-category="Keys"
+        data-color="Silver" data-location="Parking Lot B">
+        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
+          <div class="position-relative">
+            <img
+              src="https://images.unsplash.com/photo-1703355685886-8ef78d28ae9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
+              class="w-100" style="height: 250px; object-fit: cover;" alt="Key Set with Brown Leather Tag">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-success text-white">92% Match</span>
+            </div>
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-white text-dark">Keys</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-semibold mb-3">Key Set with Brown Leather Tag</h5>
+            <div class="mb-3">
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Parking Lot B
+              </div>
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Dec 14, 2025
+              </div>
+              <div class="d-flex align-items-center text-muted small">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Color: Silver
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" onclick="viewItemDetails('Key Set with Brown Leather Tag')">
+              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 4 -->
+      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="MacBook Pro 16" data-category="Electronics"
+        data-color="Gray" data-location="Study Room 304">
+        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
+          <div class="position-relative">
+            <img
+              src="https://images.unsplash.com/photo-1511385348-a52b4a160dc2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
+              class="w-100" style="height: 250px; object-fit: cover;" alt="MacBook Pro 16">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-warning text-dark">85% Match</span>
+            </div>
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-white text-dark">Electronics</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-semibold mb-3">MacBook Pro 16"</h5>
+            <div class="mb-3">
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Study Room 304
+              </div>
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Dec 17, 2025
+              </div>
+              <div class="d-flex align-items-center text-muted small">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Color: Gray
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" onclick="viewItemDetails('MacBook Pro 16')">
+              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 5 -->
+      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Sony WH-1000XM5 Headphones" data-category="Electronics"
+        data-color="Black" data-location="Gym Locker Room">
+        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
+          <div class="position-relative">
+            <img
+              src="https://images.unsplash.com/photo-1572119244337-bcb4aae995af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
+              class="w-100" style="height: 250px; object-fit: cover;" alt="Sony WH-1000XM5 Headphones">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-success text-white">90% Match</span>
+            </div>
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-white text-dark">Electronics</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-semibold mb-3">Sony WH-1000XM5 Headphones</h5>
+            <div class="mb-3">
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Gym Locker Room
+              </div>
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Dec 13, 2025
+              </div>
+              <div class="d-flex align-items-center text-muted small">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Color: Black
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" onclick="viewItemDetails('Sony WH-1000XM5 Headphones')">
+              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item 6 -->
+      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Red Sports Water Bottle" data-category="Personal Items"
+        data-color="Red" data-location="Basketball Court">
+        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
+          <div class="position-relative">
+            <img
+              src="https://images.unsplash.com/photo-1746484592922-b1dd99a7ff13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
+              class="w-100" style="height: 250px; object-fit: cover;" alt="Red Sports Water Bottle">
+            <div class="position-absolute top-0 end-0 m-3">
+              <span class="badge bg-orange text-white">78% Match</span>
+            </div>
+            <div class="position-absolute top-0 start-0 m-3">
+              <span class="badge bg-white text-dark">Personal Items</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <h5 class="fw-semibold mb-3">Red Sports Water Bottle</h5>
+            <div class="mb-3">
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                </svg>
+                Basketball Court
+              </div>
+              <div class="d-flex align-items-center text-muted small mb-2">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                Dec 16, 2025
+              </div>
+              <div class="d-flex align-items-center text-muted small">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                Color: Red
+              </div>
+            </div>
+            <button class="btn btn-accent w-100" onclick="viewItemDetails('Red Sports Water Bottle')">
+              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div class="text-center mt-5">
+      <button class="btn btn-outline btn-lg border-2 px-5">
+        <svg class="me-2" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+        Load More Results
+      </button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation (Mobile) -->
+  <nav class="navbar fixed-bottom d-lg-none bg-white border-top shadow-lg">
+    <div class="container-fluid">
+      <div class="row w-100 g-0">
+        <div class="col text-center">
+          <button class="btn btn-link text-muted-foreground p-2 d-flex flex-column align-items-center"
+            onclick="navigateTo('index.html')">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" viewBox="0 0 24 24">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <small>Home</small>
+          </button>
+        </div>
+        <div class="col text-center">
+          <button class="btn btn-link text-primary p-2 d-flex flex-column align-items-center"
+            onclick="navigateTo('search.html')">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <small>Search</small>
+          </button>
+        </div>
+        <div class="col text-center">
+          <button class="btn btn-link text-muted-foreground p-2 d-flex flex-column align-items-center"
+            onclick="navigateTo('finder.html')">
+            <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z" />
+              <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z" />
+              <circle cx="9" cy="12" r="1" />
+              <circle cx="12" cy="12" r="1" />
+              <circle cx="15" cy="12" r="1" />
+            </svg>
+            <small>Find</small>
+          </button>
+        </div>
+        <div class="col text-center">
+          <button class="btn btn-link text-muted-foreground p-2 d-flex flex-column align-items-center"
+            onclick="navigateTo('report.html')">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            <small>Report</small>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    let currentTab = 'found'; // Default tab
+
+    // Switch between tabs
+    function switchTab(tab) {
+      currentTab = tab;
+
+      // Update tab buttons
+      document.getElementById('found-tab').classList.remove('active');
+      document.getElementById('lost-tab').classList.remove('active');
+      document.getElementById(`${tab}-tab`).classList.add('active');
+
+      // Update description
+      const description = tab === 'found'
+        ? 'Browse found items reported by others (for people who lost something)'
+        : 'Browse lost items reported by others (for people who found something)';
+      document.getElementById('tab-description').textContent = description;
+
+      // Reload items for the selected tab
+      loadItems();
+    }
+
+    // Load and render items from localStorage based on current tab
+    async function loadItems(itemType = 'found') {
+      try {
+        const container = document.getElementById('items-container');
+        container.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-3">Loading items...</p>
+      </div>
+    `;
+
+        const filters = {
+          category: document.getElementById('category-filter')?.value,
+          color: document.getElementById('color-filter')?.value,
+          search: document.getElementById('search-input')?.value
+        };
+
+        Object.keys(filters).forEach(key => {
+          if (!filters[key] || filters[key] === 'all') delete filters[key];
+        });
+
+        const result = itemType === 'lost'
+          ? await LostFoundAPI.getLostItems(filters)
+          : await LostFoundAPI.getFoundItems(filters);
+
+        document.getElementById('results-count').textContent = result.count;
+        displayItems(result.items, itemType);
+
+      } catch (error) {
+        console.error('Failed to load items:', error);
+        alert('Failed to load items: ' + error.message);
+      }
+    }
+
+    function displayItems(items, itemType) {
+      const container = document.getElementById('items-container');
+
+      if (!items || items.length === 0) {
+        container.innerHTML = `
+      <div class="col-12 text-center py-5">
+        <h5 class="text-muted">No items found</h5>
+      </div>
+    `;
+        return;
+      }
+
+      container.innerHTML = items.map(item => `
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        ${item.image ? `
+          <img src="${API_BASE_URL}/${item.image}" class="card-img-top" alt="${item.itemName}" style="height: 200px; object-fit: cover;">
+        ` : `
+          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+            <span class="text-muted">No Image</span>
+          </div>
+        `}
+        <div class="card-body">
+          <h5 class="card-title">${item.itemName}</h5>
+          <div class="mb-2">
+            <span class="badge bg-primary">${item.category}</span>
+            ${item.color ? `<span class="badge bg-secondary">${item.color}</span>` : ''}
+          </div>
+          <p class="card-text small text-muted">
+            📍 ${item.location}<br>
+            📅 ${new Date(item.date).toLocaleDateString()}
+          </p>
+          <p class="card-text">${(item.description || 'No description').substring(0, 100)}...</p>
+          <button class="btn btn-sm btn-primary" onclick="viewItemDetails('${itemType}', ${item.id})">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+    }
+
+
+    // Load items on page load
+    document.addEventListener('DOMContentLoaded', loadItems);
+
+    // Search input listener
+    document.getElementById('search-input').addEventListener('input', function () {
+      const searchQuery = this.value;
+      const categoryFilter = document.getElementById('category-filter').value;
+      const colorFilter = document.getElementById('color-filter').value;
+      filterItems(searchQuery, categoryFilter, colorFilter);
+    });
+
+    function toggleFilters() {
+      const panel = document.getElementById('filter-panel');
+      const badge = document.getElementById('active-filters-badge');
+      if (panel.style.display === 'none' || panel.style.display === '') {
+        panel.style.display = 'block';
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+
+    function clearFilters() {
+      document.getElementById('category-filter').value = 'all';
+      document.getElementById('color-filter').value = 'all';
+      document.getElementById('search-input').value = '';
+      filterItems('', 'all', 'all');
+      document.getElementById('active-filters-badge').style.display = 'none';
+    }
+
+    function viewItemDetails(itemName) {
+      window.location.href = `item.html?item=${encodeURIComponent(itemName)}`;
+    }
+
+
+    // Initialize filtering
+    document.getElementById('category-filter').addEventListener('change', function () {
+      const searchQuery = document.getElementById('search-input').value;
+      const colorFilter = document.getElementById('color-filter').value;
+      filterItems(searchQuery, this.value, colorFilter);
+      updateActiveFiltersBadge();
+    });
+
+    document.getElementById('color-filter').addEventListener('change', function () {
+      const searchQuery = document.getElementById('search-input').value;
+      const categoryFilter = document.getElementById('category-filter').value;
+      filterItems(searchQuery, categoryFilter, this.value);
+      updateActiveFiltersBadge();
+    });
+
+    function updateActiveFiltersBadge() {
+      const categoryFilter = document.getElementById('category-filter').value;
+      const colorFilter = document.getElementById('color-filter').value;
+      const badge = document.getElementById('active-filters-badge');
+      if (categoryFilter !== 'all' || colorFilter !== 'all') {
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+
+</html>
