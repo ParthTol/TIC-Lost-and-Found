@@ -30,7 +30,6 @@
 
     /* Navigation */
     .navbar {
-      background: white !important;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       padding: 0.75rem 0;
     }
@@ -54,7 +53,7 @@
     .main-container {
       max-width: 800px;
       margin: 0 auto;
-      padding: 3rem 1rem 3rem;
+      padding: 7rem 1rem 3rem;
     }
 
     /* Header Section */
@@ -73,6 +72,11 @@
     .page-subtitle {
       font-size: 1.1rem;
       color: var(--muted);
+    }
+
+    /* Make navbar logo responsive */
+    .navbar img {
+      height: 70px;
     }
 
     /* Form Card */
@@ -257,25 +261,156 @@
     .form-control.is-invalid + .invalid-feedback {
       display: block;
     }
+
+    /* Responsive Design - Mobile Optimizations */
+    @media (max-width: 991px) {
+      .main-container {
+        padding-top: 6rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar img {
+        height: 50px;
+      }
+
+      .main-container {
+        padding: 5rem 0.75rem 2rem;
+      }
+
+      .page-header {
+        margin-bottom: 2rem;
+      }
+
+      .page-title {
+        font-size: 2rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+      }
+
+      .form-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+      }
+
+      .form-section-title {
+        font-size: 1.1rem;
+      }
+
+      .upload-area {
+        padding: 2rem 1rem;
+      }
+
+      .upload-icon {
+        width: 48px;
+        height: 48px;
+      }
+
+      .upload-title {
+        font-size: 1.2rem;
+      }
+
+      .upload-text {
+        font-size: 0.875rem;
+      }
+
+      .form-control, .form-select {
+        font-size: 0.875rem;
+      }
+
+      .btn-primary, .btn-secondary {
+        padding: 0.625rem 1.5rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .navbar img {
+        height: 45px;
+      }
+
+      .main-container {
+        padding: 5rem 0.5rem 2rem;
+      }
+
+      .page-title {
+        font-size: 1.75rem;
+      }
+
+      .page-subtitle {
+        font-size: 0.9rem;
+      }
+
+      .form-card {
+        padding: 1rem;
+      }
+
+      .form-section {
+        margin-bottom: 1.5rem;
+      }
+
+      .upload-area {
+        padding: 1.5rem 0.75rem;
+        border-width: 2px;
+      }
+
+      .upload-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 1rem;
+      }
+
+      .upload-title {
+        font-size: 1rem;
+      }
+
+      .form-control, .form-select, textarea {
+        font-size: 0.875rem;
+        padding: 0.625rem;
+      }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+      }
+
+      .btn-primary + .btn-secondary {
+        margin-top: 0.75rem;
+      }
+
+      .success-card {
+        width: 95%;
+        padding: 1.5rem;
+      }
+    }
+
+    /* Extra small devices */
+    @media (max-width: 375px) {
+      .navbar img {
+        height: 40px;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+      }
+
+      .form-section-title {
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body style="padding-top: 0%;">
   <!-- Top Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-light">
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top" style="background: linear-gradient(to right, #1E3A8A, #14B8A6);">
     <div class="container">
-      <a class="navbar-brand" href="#" onclick="navigateTo('index.html')">
-        <div style="background: linear-gradient(to bottom right, var(--primary), var(--secondary));" class="brand-icon">
-          <svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z"/>
-            <path d="M8 5a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H8V5z"/>
-            <circle cx="9" cy="12" r="1"/>
-            <circle cx="12" cy="12" r="1"/>
-            <circle cx="15" cy="12" r="1"/>
-          </svg>
-        </div>
+      <a class="navbar-brand d-flex align-items-center" href="#" onclick="navigateTo('index.html')">
+        <img src="assets/images/logo.png" alt="VIT Pune Logo" height="70" style="object-fit: contain;">
         <div class="d-none d-sm-block">
-          <div class="fw-bold text-primary mb-0">VIT Pune Lost & Found</div>
-          <small class="text-muted">Vishwakarma Institute of Technology</small>
+          <img src="assets/images/TIClogo.png" alt="TIC VIT Pune Logo" height="70" style="object-fit: contain;transform: translateX(5px);">
         </div>
       </a>
 
@@ -289,9 +424,6 @@
             <a class="nav-link" href="index.html">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="finder.html">Find Item</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" href="report.html">Report Lost</a>
           </li>
           <li class="nav-item">
@@ -302,15 +434,14 @@
           </li>
         </ul>
         <div class="d-none d-lg-flex ms-auto">
-          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('index.html')">Home</button>
-          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('finder.html')">Find Item</button>
-          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('report.html')">Report Lost</button>
-          <button class="btn btn-link text-muted-foreground me-4" onclick="navigateTo('found.html')">Report Found</button>
+          <button class="btn btn-link text-white me-4" onclick="navigateTo('index.html')">Home</button>
+          <button class="btn btn-link text-white me-4" onclick="navigateTo('report.html')">Report Lost</button>
+          <button class="btn btn-link text-white me-4 fw-bold" onclick="navigateTo('found.html')" style="text-decoration: underline;">Report Found</button>
           <button class="btn btn-accent" onclick="navigateTo('search.html')">Browse Items</button>
         </div>
       </div>
 
-     
+      
     </div>
   </nav>
 
@@ -338,8 +469,25 @@
               <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
             </svg>
             <div class="upload-title">Upload Item Photo</div>
-            <div class="upload-text">Drag & drop or click to select an image</div>
-            <input type="file" id="image-input" accept="image/*" style="display: none;">
+            <div class="upload-text">Drag & drop, choose file, or take a photo</div>
+            <div class="d-flex gap-2 justify-content-center mt-3">
+              <button type="button" class="btn btn-primary" onclick="document.getElementById('image-input').click()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="me-1">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+                Choose File
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="openCameraForFound()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="me-1">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                  <circle cx="12" cy="13" r="4" />
+                </svg>
+                Take Photo
+              </button>
+            </div>
+            <input type="file" id="image-input" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
           </div>
           <img id="image-preview" class="image-preview" alt="Image Preview">
         </div>
@@ -505,6 +653,26 @@
         uploadArea.style.display = 'none';
       };
       reader.readAsDataURL(file);
+    }
+
+    // Camera functionality for Take Photo button
+    function openCameraForFound() {
+      const input = document.getElementById('image-input');
+      // Set capture attribute to use camera
+      input.setAttribute('capture', 'environment');
+      input.click();
+      // Remove capture attribute after to allow normal file selection on next use
+      setTimeout(() => {
+        input.removeAttribute('capture');
+      }, 100);
+    }
+
+    // Image select handler (updated for button interface)
+    function handleImageSelect(event) {
+      const file = event.target.files[0];
+      if (file) {
+        handleFileSelect(file);
+      }
     }
 
     // Form submission
