@@ -27,6 +27,16 @@
         padding-top: 90px !important;
         padding-bottom: 60px !important;
       }
+      
+      .navbar-logo {
+        height: 50px !important;
+      }
+    }
+    
+    @media (max-width: 400px) {
+      .navbar-logo {
+        height: 40px !important;
+      }
     }
   </style>
 </head>
@@ -36,10 +46,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark shadow-sm fixed-top" style="background: linear-gradient(to right, #1E3A8A, #14B8A6);">
     <div class="container">
       <a class="navbar-brand d-flex align-items-center" href="#" onclick="navigateTo('index.html')">
-        <img src="assets/images/logo.png" alt="VIT Pune Logo" height="70" style="object-fit: contain;">
-        <div class="d-none d-sm-block">
-          <img src="assets/images/TIClogo.png" alt="TIC VIT Pune Logo" height="70" style="object-fit: contain;transform: translateX(5px);">
-        </div>
+        <img src="assets/images/logo.png" alt="VIT Pune Logo" height="70" class="navbar-logo" style="object-fit: contain;">
+        <img src="assets/images/TIClogo.png" alt="TIC VIT Pune Logo" height="70" class="navbar-logo" style="object-fit: contain; margin-left: 5px;">
       </a>
 
       <button class="navbar-toggler d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
