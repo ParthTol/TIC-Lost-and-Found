@@ -591,165 +591,363 @@
   </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/api_client.js"></script>
   <script src="assets/js/main.js"></script>
   <script>
     let currentTab = 'found'; // Default tab
-
-    // Switch between tabs
-    function switchTab(tab) {
-      currentTab = tab;
-
-      // Update tab buttons
-      document.getElementById('found-tab').classList.remove('active');
-      document.getElementById('lost-tab').classList.remove('active');
-      document.getElementById(`${tab}-tab`).classList.add('active');
-
-      // Update description
-      const description = tab === 'found'
-        ? 'Browse found items reported by others (for people who lost something)'
-        : 'Browse lost items reported by others (for people who found something)';
-      document.getElementById('tab-description').textContent = description;
-
-      // Reload items for the selected tab
-      loadItems();
-    }
-
-    // Load and render items from localStorage based on current tab
-    async function loadItems(itemType = 'found') {
+     async function loadItems(itemType = 'found') {
       try {
-        const container = document.getElementById('items-container');
-        container.innerHTML = `
-      <div class="col-12 text-center py-5">
-        <div class="spinner-border text-primary"></div>
-        <p class="mt-3">Loading items...</p>
-      </div>
-    `;
-
-        const filters = {
-          category: document.getElementById('category-filter')?.value,
-          color: document.getElementById('color-filter')?.value,
-          search: document.getElementById('search-input')?.value
-        };
-
-        Object.keys(filters).forEach(key => {
-          if (!filters[key] || filters[key] === 'all') delete filters[key];
-        });
-
-        const result = itemType === 'lost'
-          ? await LostFoundAPI.getLostItems(filters)
-          : await LostFoundAPI.getFoundItems(filters);
-
-        document.getElementById('results-count').textContent = result.count;
-        displayItems(result.items, itemType);
-
+        const resultsGrid = document.getElementById('results-grid');
+        const resultsCount = document.getElementById('results-count');
+        
+        // Check if elements exist
+        if (!resultsGrid) {
+          console.error('results-grid element not found');
+          return;
+        }
+        
+        // Show loading
+        resultsGrid.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading ${itemType} items...</p>
+          </div>
+        `;
+        
+        // Get filters if they exist
+        const filters = {};
+        const searchInput = document.getElementById('search-input');
+        const categoryFilter = document.getElementById('category-filter');
+        const colorFilter = document.getElementById('color-filter');
+        
+        if (searchInput && searchInput.value) filters.search = searchInput.value;
+        if (categoryFilter && categoryFilter.value && categoryFilter.value !== 'all') {
+          filters.category = categoryFilter.value;
+        }
+        if (colorFilter && colorFilter.value && colorFilter.value !== 'all') {
+          filters.color = colorFilter.value;
+        }
+        
+        console.log('Loading items:', itemType, filters);
+        
+        // Call API
+        let result;
+        if (itemType === 'lost') {
+          result = await LostFoundAPI.getLostItems(filters);
+        } else {
+          result = await LostFoundAPI.getFoundItems(filters);
+        }
+        
+        console.log('Items loaded:', result);
+        
+        // Update counts
+        if (resultsCount) {
+          resultsCount.textContent = result.count || 0;
+        }
+        
+        const foundCount = document.getElementById('found-count');
+        const lostCount = document.getElementById('lost-count');
+        if (itemType === 'found' && foundCount) {
+          foundCount.textContent = result.count || 0;
+        }
+        if (itemType === 'lost' && lostCount) {
+          lostCount.textContent = result.count || 0;
+        }
+        
+        // Display items
+        displayItems(result.items || [], itemType);
+        
       } catch (error) {
         console.error('Failed to load items:', error);
-        alert('Failed to load items: ' + error.message);
+        
+        const resultsGrid = document.getElementById('results-grid');
+        if (resultsGrid) {
+          resultsGrid.innerHTML = `
+            <div class="col-12">
+              <div class="alert alert-danger" role="alert">
+                <h5 class="alert-heading">⚠️ Failed to load items</h5>
+                <p class="mb-0">${error.message}</p>
+                <hr>
+                <p class="mb-0 small">
+                  Make sure the backend server is running at http://localhost:5000
+                  <br>Run: <code>python app.py</code> in the backend folder
+                </p>
+                <button class="btn btn-sm btn-outline-danger mt-2" onclick="loadItems('${currentTab}')">
+                  Try Again
+                </button>
+              </div>
+            </div>
+          `;
+        }
       }
     }
-
+    
+    // ========================================================================
+    // DISPLAY ITEMS IN GRID
+    // ========================================================================
     function displayItems(items, itemType) {
-      const container = document.getElementById('items-container');
-
-      if (!items || items.length === 0) {
-        container.innerHTML = `
-      <div class="col-12 text-center py-5">
-        <h5 class="text-muted">No items found</h5>
-      </div>
-    `;
+      const resultsGrid = document.getElementById('results-grid');
+      
+      if (!resultsGrid) {
+        console.error('results-grid not found');
         return;
       }
-
-      container.innerHTML = items.map(item => `
-    <div class="col-md-6 col-lg-4 mb-4">
-      <div class="card h-100 shadow-sm">
-        ${item.image ? `
-          <img src="${API_BASE_URL}/${item.image}" class="card-img-top" alt="${item.itemName}" style="height: 200px; object-fit: cover;">
-        ` : `
-          <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
-            <span class="text-muted">No Image</span>
+      
+      // No items found
+      if (!items || items.length === 0) {
+        resultsGrid.innerHTML = `
+          <div class="col-12 text-center py-5">
+            <svg width="64" height="64" fill="currentColor" class="text-muted mb-3" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            <h5 class="text-muted">No ${itemType} items yet</h5>
+            <p class="text-muted mb-4">Be the first to report a ${itemType} item!</p>
+            <a href="${itemType === 'found' ? 'found.html' : 'report.html'}" class="btn btn-primary">
+              Report ${itemType === 'found' ? 'Found' : 'Lost'} Item
+            </a>
           </div>
-        `}
-        <div class="card-body">
-          <h5 class="card-title">${item.itemName}</h5>
-          <div class="mb-2">
-            <span class="badge bg-primary">${item.category}</span>
-            ${item.color ? `<span class="badge bg-secondary">${item.color}</span>` : ''}
+        `;
+        return;
+      }
+      
+      // Display items
+      resultsGrid.innerHTML = items.map((item, index) => `
+        <div class="col-12 col-md-6 col-lg-4 item-card" 
+             data-name="${item.itemName || 'Unknown'}" 
+             data-category="${item.category || 'other'}" 
+             data-color="${item.color || ''}" 
+             data-location="${item.location || ''}">
+          <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
+            <div class="position-relative">
+              ${item.image ? `
+                <img src="${API_BASE_URL}/${item.image}" 
+                     class="w-100" 
+                     style="height: 250px; object-fit: cover;" 
+                     alt="${item.itemName}"
+                     onerror="this.src='https://via.placeholder.com/400x250?text=No+Image'">
+              ` : `
+                <div class="w-100 bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                  <svg width="64" height="64" fill="currentColor" class="text-muted" viewBox="0 0 16 16">
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"/>
+                  </svg>
+                </div>
+              `}
+              <div class="position-absolute top-0 start-0 m-3">
+                <span class="badge bg-white text-dark">${item.category || 'Other'}</span>
+              </div>
+              ${item.matchScore ? `
+                <div class="position-absolute top-0 end-0 m-3">
+                  <span class="badge ${item.matchScore >= 80 ? 'bg-success' : item.matchScore >= 60 ? 'bg-warning text-dark' : 'bg-secondary'}">
+                    ${item.matchScore}% Match
+                  </span>
+                </div>
+              ` : ''}
+            </div>
+            <div class="p-4">
+              <h5 class="fw-semibold mb-3">${item.itemName || 'Unknown Item'}</h5>
+              <div class="mb-3">
+                <div class="d-flex align-items-center text-muted small mb-2">
+                  <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                  ${item.location || 'Unknown location'}
+                </div>
+                <div class="d-flex align-items-center text-muted small mb-2">
+                  <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                    <line x1="16" y1="2" x2="16" y2="6"/>
+                    <line x1="8" y1="2" x2="8" y2="6"/>
+                    <line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                  ${item.date ? new Date(item.date).toLocaleDateString() : 'Unknown date'}
+                </div>
+                ${item.color ? `
+                  <div class="d-flex align-items-center text-muted small">
+                    <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    Color: ${item.color}
+                  </div>
+                ` : ''}
+              </div>
+              ${item.description ? `
+                <p class="text-muted small mb-3">${item.description.substring(0, 100)}${item.description.length > 100 ? '...' : ''}</p>
+              ` : ''}
+              <button class="btn btn-accent w-100" onclick="viewItemDetails('${itemType}', ${item.id})">
+                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                View Details
+              </button>
+            </div>
           </div>
-          <p class="card-text small text-muted">
-            📍 ${item.location}<br>
-            📅 ${new Date(item.date).toLocaleDateString()}
-          </p>
-          <p class="card-text">${(item.description || 'No description').substring(0, 100)}...</p>
-          <button class="btn btn-sm btn-primary" onclick="viewItemDetails('${itemType}', ${item.id})">
-            View Details
-          </button>
         </div>
-      </div>
-    </div>
-  `).join('');
+      `).join('');
     }
+    
+    // ========================================================================
+    // SWITCH TABS
+    // ========================================================================
+    function switchTab(tabType) {
+      currentTab = tabType;
+      
+      // Update tab UI
+      const foundTab = document.getElementById('found-tab');
+      const lostTab = document.getElementById('lost-tab');
+      const tabDescription = document.getElementById('tab-description');
+      
+      if (foundTab && lostTab) {
+        foundTab.classList.toggle('active', tabType === 'found');
+        lostTab.classList.toggle('active', tabType === 'lost');
+      }
+      
+      // Update description
+      if (tabDescription) {
+        const description = tabType === 'found' 
+          ? 'Browse found items reported by others (for people who lost something)'
+          : 'Browse lost items reported by others (for people who found something)';
+        tabDescription.textContent = description;
+      }
+      
+      // Load items
+      loadItems(tabType);
+    }
+    
+    // ========================================================================
+    // VIEW ITEM DETAILS
+    // ========================================================================
+    async function viewItemDetails(itemType, itemId) {
+      try {
+        const result = await LostFoundAPI.getItemDetails(itemType, itemId);
+        showItemModal(result.item);
+      } catch (error) {
+        alert('Failed to load item details: ' + error.message);
+      }
+    }
+    
+    function showItemModal(item) {
+      // Create simple modal
+      alert(`
+Item: ${item.itemName}
+Category: ${item.category}
+Location: ${item.location}
+Date: ${item.date}
+${item.description ? 'Description: ' + item.description : ''}
 
-
-    // Load items on page load
-    document.addEventListener('DOMContentLoaded', loadItems);
-
+Contact: ${item.contactInfo ? item.contactInfo.email || item.contactInfo.phone : 'No contact info'}
+      `);
+      
+      // TODO: Create a proper Bootstrap modal for better UI
+    }
+    
+    // ========================================================================
+    // SEARCH AND FILTERS
+    // ========================================================================
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+    
     // Search input listener
-    document.getElementById('search-input').addEventListener('input', function () {
-      const searchQuery = this.value;
-      const categoryFilter = document.getElementById('category-filter').value;
-      const colorFilter = document.getElementById('color-filter').value;
-      filterItems(searchQuery, categoryFilter, colorFilter);
-    });
-
-    function toggleFilters() {
-      const panel = document.getElementById('filter-panel');
-      const badge = document.getElementById('active-filters-badge');
-      if (panel.style.display === 'none' || panel.style.display === '') {
-        panel.style.display = 'block';
-      } else {
-        panel.style.display = 'none';
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+      searchInput.addEventListener('input', debounce(function() {
+        loadItems(currentTab);
+      }, 500));
+    }
+    
+    // Filter listeners
+    const categoryFilter = document.getElementById('category-filter');
+    const colorFilter = document.getElementById('color-filter');
+    
+    if (categoryFilter) {
+      categoryFilter.addEventListener('change', function() {
+        loadItems(currentTab);
+      });
+    }
+    
+    if (colorFilter) {
+      colorFilter.addEventListener('change', function() {
+        loadItems(currentTab);
+      });
+    }
+    
+    // ========================================================================
+    // INITIALIZE ON PAGE LOAD
+    // ========================================================================
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Search page loaded - initializing...');
+      
+      // Check for matches from previous page
+      const urlParams = new URLSearchParams(window.location.search);
+      const showMatches = urlParams.get('matches');
+      const tab = urlParams.get('tab');
+      
+      if (showMatches === 'true') {
+        // Load matches from localStorage
+        const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+        if (matches.length > 0) {
+          displayMatches(matches);
+          return;
+        }
       }
-    }
-
-    function clearFilters() {
-      document.getElementById('category-filter').value = 'all';
-      document.getElementById('color-filter').value = 'all';
-      document.getElementById('search-input').value = '';
-      filterItems('', 'all', 'all');
-      document.getElementById('active-filters-badge').style.display = 'none';
-    }
-
-    function viewItemDetails(itemName) {
-      window.location.href = `item.html?item=${encodeURIComponent(itemName)}`;
-    }
-
-
-    // Initialize filtering
-    document.getElementById('category-filter').addEventListener('change', function () {
-      const searchQuery = document.getElementById('search-input').value;
-      const colorFilter = document.getElementById('color-filter').value;
-      filterItems(searchQuery, this.value, colorFilter);
-      updateActiveFiltersBadge();
+      
+      // Load normal items
+      const activeTab = tab || 'found';
+      switchTab(activeTab);
     });
-
-    document.getElementById('color-filter').addEventListener('change', function () {
-      const searchQuery = document.getElementById('search-input').value;
-      const categoryFilter = document.getElementById('category-filter').value;
-      filterItems(searchQuery, categoryFilter, this.value);
-      updateActiveFiltersBadge();
-    });
-
-    function updateActiveFiltersBadge() {
-      const categoryFilter = document.getElementById('category-filter').value;
-      const colorFilter = document.getElementById('color-filter').value;
-      const badge = document.getElementById('active-filters-badge');
-      if (categoryFilter !== 'all' || colorFilter !== 'all') {
-        badge.style.display = 'inline-block';
-      } else {
-        badge.style.display = 'none';
+    
+    // ========================================================================
+    // DISPLAY MATCHES
+    // ========================================================================
+    function displayMatches(matches) {
+      const resultsGrid = document.getElementById('results-grid');
+      const resultsCount = document.getElementById('results-count');
+      
+      if (!resultsGrid) return;
+      
+      if (resultsCount) {
+        resultsCount.textContent = matches.length;
       }
+      
+      // Add match scores to items
+      const matchedItems = matches.map(match => ({
+        ...match.item,
+        matchScore: match.matchScore
+      }));
+      
+      displayItems(matchedItems, 'found');
+      
+      // Show banner
+      const container = document.querySelector('.container.py-5');
+      if (container) {
+        const banner = document.createElement('div');
+        banner.className = 'alert alert-success alert-dismissible fade show mb-4';
+        banner.innerHTML = `
+          <h5 class="alert-heading">🎉 Potential Matches Found!</h5>
+          <p class="mb-0">We found ${matches.length} item(s) that might match your lost item.</p>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        container.insertBefore(banner, container.children[1]);
+      }
+      
+      // Clear matches from localStorage
+      localStorage.removeItem('matches');
     }
+    
   </script>
 </body>
 
