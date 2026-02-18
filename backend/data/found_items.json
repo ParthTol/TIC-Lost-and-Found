@@ -16,5 +16,23 @@
     "status": "available",
     "reportedAt": "2026-02-15T00:00:56.706543",
     "aiAnalysis": {}
+  },
+  {
+    "id": 1,
+    "itemName": "HP victus",
+    "category": "Electronics",
+    "color": "Blue",
+    "location": "library",
+    "date": "2026-02-13",
+    "description": "laptop lost",
+    "contactInfo": {
+      "name": "parth",
+      "email": "parthtol587@gmail.com",
+      "phone": ""
+    },
+    "image": "",
+    "status": "available",
+    "reportedAt": "2026-02-15T00:42:20.093602",
+    "aiAnalysis": {}
   }
 ]
