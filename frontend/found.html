@@ -413,6 +413,96 @@
         height: 40px !important;
       }
     }
+
+    /* Camera Modal Styles */
+    .camera-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .camera-container {
+      position: relative;
+      max-width: 100%;
+      max-height: 70vh;
+    }
+
+    #camera-video {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 12px;
+      transform: scaleX(-1);
+    }
+
+    #camera-canvas {
+      display: none;
+    }
+
+    .camera-controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+
+    .camera-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .camera-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .capture-btn {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      box-shadow: 0 4px 15px rgba(30, 64, 175, 0.4);
+    }
+
+    .capture-btn:hover {
+      box-shadow: 0 6px 20px rgba(30, 64, 175, 0.6);
+    }
+
+    .close-camera-btn {
+      background: #ef4444;
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+    }
+
+    .switch-camera-btn {
+      background: #6b7280;
+      box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4);
+    }
+
+    .camera-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+    }
+
+    .camera-error {
+      color: white;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .camera-error h4 {
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body style="padding-top: 0%;">
@@ -613,6 +703,30 @@
     </div>
   </div>
 
+  <!-- Camera Modal -->
+  <div class="camera-modal" id="camera-modal">
+    <div class="camera-container">
+      <video id="camera-video" autoplay playsinline></video>
+      <canvas id="camera-canvas"></canvas>
+    </div>
+    <div class="camera-controls">
+      <button class="camera-btn close-camera-btn" onclick="closeCamera()" title="Close">
+        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      </button>
+      <button class="camera-btn capture-btn" onclick="capturePhoto()" title="Take Photo">
+        <svg viewBox="0 0 24 24"><path d="M12 15.2c1.76 0 3.2-1.44 3.2-3.2S13.76 8.8 12 8.8 8.8 10.24 8.8 12s1.44 3.2 3.2 3.2zM9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/></svg>
+      </button>
+      <button class="camera-btn switch-camera-btn" onclick="switchCamera()" title="Switch Camera">
+        <svg viewBox="0 0 24 24"><path d="M9.5 16.5v-9l7 4.5-7 4.5zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+      </button>
+    </div>
+    <div class="camera-error" id="camera-error" style="display: none;">
+      <h4>Camera Access Required</h4>
+      <p>Please allow camera access to take a photo, or use the "Choose File" option instead.</p>
+      <button class="btn btn-secondary mt-3" onclick="closeCamera()">Close</button>
+    </div>
+  </div>
+
   <!-- Success Modal -->
   <div class="success-modal" id="success-modal">
     <div class="success-card">
@@ -665,17 +779,95 @@
       reader.readAsDataURL(file);
     }
 
-    // Camera functionality for Take Photo button
-    function openCameraForFound() {
-      const input = document.getElementById('image-input');
-      // Set capture attribute to use camera
-      input.setAttribute('capture', 'environment');
-      input.click();
-      // Remove capture attribute after to allow normal file selection on next use
-      setTimeout(() => {
-        input.removeAttribute('capture');
-      }, 100);
+    // Camera functionality using getUserMedia API
+    let cameraStream = null;
+    let facingMode = 'environment'; // 'environment' for back camera, 'user' for front camera
+
+    async function openCameraForFound() {
+      const cameraModal = document.getElementById('camera-modal');
+      const video = document.getElementById('camera-video');
+      const errorDiv = document.getElementById('camera-error');
+      
+      cameraModal.style.display = 'flex';
+      errorDiv.style.display = 'none';
+      video.style.display = 'block';
+
+      try {
+        // Stop any existing stream
+        if (cameraStream) {
+          cameraStream.getTracks().forEach(track => track.stop());
+        }
+
+        // Request camera access
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: facingMode,
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+
+        video.srcObject = cameraStream;
+        await video.play();
+      } catch (error) {
+        console.error('Camera error:', error);
+        video.style.display = 'none';
+        errorDiv.style.display = 'block';
+      }
     }
+
+    function closeCamera() {
+      const cameraModal = document.getElementById('camera-modal');
+      const video = document.getElementById('camera-video');
+      
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+      
+      video.srcObject = null;
+      cameraModal.style.display = 'none';
+    }
+
+    async function switchCamera() {
+      facingMode = facingMode === 'environment' ? 'user' : 'environment';
+      await openCameraForFound();
+    }
+
+    function capturePhoto() {
+      const video = document.getElementById('camera-video');
+      const canvas = document.getElementById('camera-canvas');
+      const ctx = canvas.getContext('2d');
+
+      // Set canvas size to match video
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      // Draw video frame to canvas (flip horizontally to match mirror view)
+      ctx.translate(canvas.width, 0);
+      ctx.scale(-1, 1);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset transform
+
+      // Convert to data URL
+      const imageDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+
+      // Display captured image
+      imagePreview.src = imageDataUrl;
+      imagePreview.style.display = 'block';
+      uploadArea.style.display = 'none';
+
+      // Close camera
+      closeCamera();
+    }
+
+    // Close camera modal on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.getElementById('camera-modal').style.display === 'flex') {
+        closeCamera();
+      }
+    });
 
     // Image select handler (updated for button interface)
     function handleImageSelect(event) {
