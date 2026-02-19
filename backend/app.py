@@ -67,6 +67,14 @@ def load_item_data(item_type):
     except FileNotFoundError:
         return []
 
+def get_next_id(item_type):
+    """Get the next unique ID for an item type"""
+    items = load_item_data(item_type)
+    if not items:
+        return 1
+    max_id = max(item.get('id', 0) for item in items)
+    return max_id + 1
+
 @app.route('/')
 def index():
     """Health check endpoint"""
@@ -166,7 +174,7 @@ def report_lost():
         
         # Create lost item entry
         lost_item = {
-            'id': len(lost_items) + 1,
+            'id': get_next_id('lost'),
             'itemName': data['itemName'],
             'category': data['category'],
             'color': data.get('color', ''),
@@ -210,7 +218,7 @@ def report_found():
         
         # Create found item entry
         found_item = {
-            'id': len(found_items) + 1,
+            'id': get_next_id('found'),
             'itemName': data['itemName'],
             'category': data['category'],
             'color': data.get('color', ''),
