@@ -18,7 +18,7 @@
     "aiAnalysis": {}
   },
   {
-    "id": 1,
+    "id": 2,
     "itemName": "HP victus",
     "category": "Electronics",
     "color": "Blue",
@@ -33,6 +33,24 @@
     "image": "",
     "status": "available",
     "reportedAt": "2026-02-15T00:42:20.093602",
+    "aiAnalysis": {}
+  },
+  {
+    "id": 3,
+    "itemName": "Laptop",
+    "category": "Electronics",
+    "color": "Black",
+    "location": "FC",
+    "date": "2026-02-17",
+    "description": "ThinkPad laptop",
+    "contactInfo": {
+      "name": "Nihar ",
+      "email": "98982530488",
+      "phone": ""
+    },
+    "image": "",
+    "status": "available",
+    "reportedAt": "2026-02-18T22:14:39.304141",
     "aiAnalysis": {}
   }
 ]
