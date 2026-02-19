@@ -215,331 +215,14 @@
       </div>
     </div>
 
-    <!-- Results Grid -->
+    <!-- Results Grid - Items loaded dynamically from backend -->
     <div class="row g-4" id="results-grid">
-      <!-- Item 1 -->
-      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Black Laptop" data-category="Electronics"
-        data-color="Black" data-location="Library - 2nd Floor">
-        <div class="bg-white rounded-4 shadow-lg overflow-hidden h-100 transition-all"
-          style="transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-4px)'"
-          onmouseout="this.style.transform='translateY(0)'">
-          <div class="position-relative">
-            <img src="https://images.pexels.com/photos/33125275/pexels-photo-33125275.jpeg" class="w-100"
-              style="height: 220px; object-fit: cover;" alt="Black Laptop">
-            <div class="position-absolute top-0 end-0 m-3">
-              <span class="badge text-white fw-semibold px-3 py-2"
-                style="background-color: #10b981; border-radius: 20px; font-size: 0.875rem;">90% Match</span>
-            </div>
-            <div class="position-absolute top-0 start-0 m-3">
-              <span class="badge bg-white text-dark fw-semibold px-3 py-2"
-                style="border-radius: 20px; font-size: 0.875rem;">Electronics</span>
-            </div>
-          </div>
-          <div class="p-4">
-            <h5 class="fw-semibold mb-3">Black Laptop</h5>
-            <div class="mb-3">
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
-                Library - 2nd Floor
-              </div>
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Dec 15, 2025
-              </div>
-              <div class="d-flex align-items-center text-muted small">
-                <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Color: Black
-              </div>
-            </div>
-            <button class="btn btn-accent w-100" onclick="viewItemDetails('Black Backpack')">
-              <svg class="me-2" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </div>
+      <!-- Loading placeholder - will be replaced by loadItems() -->
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
         </div>
-      </div>
-
-      <!-- Item 2 -->
-      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="iPhone 15 Pro" data-category="Electronics"
-        data-color="Blue" data-location="Cafeteria">
-        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
-          <div class="position-relative">
-            <img
-              src="https://images.unsplash.com/photo-1741061963569-9d0ef54d10d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-              class="w-100" style="height: 250px; object-fit: cover;" alt="iPhone 15 Pro">
-            <div class="position-absolute top-0 end-0 m-3">
-              <span class="badge bg-warning text-dark">88% Match</span>
-            </div>
-            <div class="position-absolute top-0 start-0 m-3">
-              <span class="badge bg-white text-dark">Electronics</span>
-            </div>
-          </div>
-          <div class="p-4">
-            <h5 class="fw-semibold mb-3">iPhone 15 Pro</h5>
-            <div class="mb-3">
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                Cafeteria
-              </div>
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Dec 16, 2025
-              </div>
-              <div class="d-flex align-items-center text-muted small">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Color: Blue
-              </div>
-            </div>
-            <button class="btn btn-accent w-100" onclick="viewItemDetails('iPhone 15 Pro')">
-              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 3 -->
-      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Key Set with Brown Leather Tag" data-category="Keys"
-        data-color="Silver" data-location="Parking Lot B">
-        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
-          <div class="position-relative">
-            <img
-              src="https://images.unsplash.com/photo-1703355685886-8ef78d28ae9c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-              class="w-100" style="height: 250px; object-fit: cover;" alt="Key Set with Brown Leather Tag">
-            <div class="position-absolute top-0 end-0 m-3">
-              <span class="badge bg-success text-white">92% Match</span>
-            </div>
-            <div class="position-absolute top-0 start-0 m-3">
-              <span class="badge bg-white text-dark">Keys</span>
-            </div>
-          </div>
-          <div class="p-4">
-            <h5 class="fw-semibold mb-3">Key Set with Brown Leather Tag</h5>
-            <div class="mb-3">
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                Parking Lot B
-              </div>
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Dec 14, 2025
-              </div>
-              <div class="d-flex align-items-center text-muted small">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Color: Silver
-              </div>
-            </div>
-            <button class="btn btn-accent w-100" onclick="viewItemDetails('Key Set with Brown Leather Tag')">
-              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 4 -->
-      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="MacBook Pro 16" data-category="Electronics"
-        data-color="Gray" data-location="Study Room 304">
-        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
-          <div class="position-relative">
-            <img
-              src="https://images.unsplash.com/photo-1511385348-a52b4a160dc2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-              class="w-100" style="height: 250px; object-fit: cover;" alt="MacBook Pro 16">
-            <div class="position-absolute top-0 end-0 m-3">
-              <span class="badge bg-warning text-dark">85% Match</span>
-            </div>
-            <div class="position-absolute top-0 start-0 m-3">
-              <span class="badge bg-white text-dark">Electronics</span>
-            </div>
-          </div>
-          <div class="p-4">
-            <h5 class="fw-semibold mb-3">MacBook Pro 16"</h5>
-            <div class="mb-3">
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                Study Room 304
-              </div>
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Dec 17, 2025
-              </div>
-              <div class="d-flex align-items-center text-muted small">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Color: Gray
-              </div>
-            </div>
-            <button class="btn btn-accent w-100" onclick="viewItemDetails('MacBook Pro 16')">
-              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 5 -->
-      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Sony WH-1000XM5 Headphones" data-category="Electronics"
-        data-color="Black" data-location="Gym Locker Room">
-        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
-          <div class="position-relative">
-            <img
-              src="https://images.unsplash.com/photo-1572119244337-bcb4aae995af?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-              class="w-100" style="height: 250px; object-fit: cover;" alt="Sony WH-1000XM5 Headphones">
-            <div class="position-absolute top-0 end-0 m-3">
-              <span class="badge bg-success text-white">90% Match</span>
-            </div>
-            <div class="position-absolute top-0 start-0 m-3">
-              <span class="badge bg-white text-dark">Electronics</span>
-            </div>
-          </div>
-          <div class="p-4">
-            <h5 class="fw-semibold mb-3">Sony WH-1000XM5 Headphones</h5>
-            <div class="mb-3">
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                Gym Locker Room
-              </div>
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Dec 13, 2025
-              </div>
-              <div class="d-flex align-items-center text-muted small">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Color: Black
-              </div>
-            </div>
-            <button class="btn btn-accent w-100" onclick="viewItemDetails('Sony WH-1000XM5 Headphones')">
-              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Item 6 -->
-      <div class="col-12 col-md-6 col-lg-4 item-card" data-name="Red Sports Water Bottle" data-category="Personal Items"
-        data-color="Red" data-location="Basketball Court">
-        <div class="bg-white rounded-3 shadow-lg overflow-hidden h-100">
-          <div class="position-relative">
-            <img
-              src="https://images.unsplash.com/photo-1746484592922-b1dd99a7ff13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400"
-              class="w-100" style="height: 250px; object-fit: cover;" alt="Red Sports Water Bottle">
-            <div class="position-absolute top-0 end-0 m-3">
-              <span class="badge bg-orange text-white">78% Match</span>
-            </div>
-            <div class="position-absolute top-0 start-0 m-3">
-              <span class="badge bg-white text-dark">Personal Items</span>
-            </div>
-          </div>
-          <div class="p-4">
-            <h5 class="fw-semibold mb-3">Red Sports Water Bottle</h5>
-            <div class="mb-3">
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <path
-                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                </svg>
-                Basketball Court
-              </div>
-              <div class="d-flex align-items-center text-muted small mb-2">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-                Dec 16, 2025
-              </div>
-              <div class="d-flex align-items-center text-muted small">
-                <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-                Color: Red
-              </div>
-            </div>
-            <button class="btn btn-accent w-100" onclick="viewItemDetails('Red Sports Water Bottle')">
-              <svg class="me-2" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                <circle cx="12" cy="12" r="3" />
-              </svg>
-              View Details
-            </button>
-          </div>
-        </div>
+        <p class="mt-3 text-muted">Loading items...</p>
       </div>
     </div>
 
@@ -828,28 +511,9 @@
     // ========================================================================
     // VIEW ITEM DETAILS
     // ========================================================================
-    async function viewItemDetails(itemType, itemId) {
-      try {
-        const result = await LostFoundAPI.getItemDetails(itemType, itemId);
-        showItemModal(result.item);
-      } catch (error) {
-        alert('Failed to load item details: ' + error.message);
-      }
-    }
-    
-    function showItemModal(item) {
-      // Create simple modal
-      alert(`
-Item: ${item.itemName}
-Category: ${item.category}
-Location: ${item.location}
-Date: ${item.date}
-${item.description ? 'Description: ' + item.description : ''}
-
-Contact: ${item.contactInfo ? item.contactInfo.email || item.contactInfo.phone : 'No contact info'}
-      `);
-      
-      // TODO: Create a proper Bootstrap modal for better UI
+    function viewItemDetails(itemType, itemId) {
+      // Navigate to item.html with type and id parameters
+      window.location.href = `item.html?type=${itemType}&id=${itemId}`;
     }
     
     // ========================================================================
@@ -952,6 +616,34 @@ Contact: ${item.contactInfo ? item.contactInfo.email || item.contactInfo.phone :
       
       // Clear matches from localStorage
       localStorage.removeItem('matches');
+    }
+    
+    // ========================================================================
+    // FILTER TOGGLE AND CLEAR
+    // ========================================================================
+    function toggleFilters() {
+      const filterPanel = document.getElementById('filter-panel');
+      const filtersBadge = document.getElementById('active-filters-badge');
+      
+      if (filterPanel) {
+        const isHidden = filterPanel.style.display === 'none' || filterPanel.style.display === '';
+        filterPanel.style.display = isHidden ? 'block' : 'none';
+      }
+    }
+    
+    function clearFilters() {
+      const categoryFilter = document.getElementById('category-filter');
+      const colorFilter = document.getElementById('color-filter');
+      const searchInput = document.getElementById('search-input');
+      const filtersBadge = document.getElementById('active-filters-badge');
+      
+      if (categoryFilter) categoryFilter.value = 'all';
+      if (colorFilter) colorFilter.value = 'all';
+      if (searchInput) searchInput.value = '';
+      if (filtersBadge) filtersBadge.style.display = 'none';
+      
+      // Reload items with no filters
+      loadItems(currentTab);
     }
     
   </script>
