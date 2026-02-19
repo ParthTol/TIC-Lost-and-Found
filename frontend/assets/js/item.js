@@ -1,5 +1,7 @@
 /* =========================
-   Item Data (Mock Database)
+   Fallback Item Data
+   Used only when API fails or for legacy URL format (?item=name)
+   Primary source is the backend API
    ========================= */
 
 const items = {
@@ -77,59 +79,116 @@ const items = {
 };
 
 /* =========================
-   Read URL Parameter
+   Read URL Parameters
    ========================= */
 
 const params = new URLSearchParams(window.location.search);
 const itemName = params.get("item");
+const itemType = params.get("type");  // 'found' or 'lost'
+const itemId = params.get("id");
 
 /* =========================
    Populate Item Page
    ========================= */
 
-function loadItemDetails() {
-  // Try to load from localStorage first
+async function loadItemDetails() {
+  // If we have type and id, fetch from API
+  if (itemType && itemId) {
+    try {
+      const result = await LostFoundAPI.getItemDetails(itemType, itemId);
+      if (result && result.item) {
+        displayItem(result.item);
+        return;
+      }
+    } catch (error) {
+      console.error('Failed to load item from API:', error);
+      // Fall through to other methods
+    }
+  }
+  
+  // Try to load from localStorage
   const foundItems = JSON.parse(localStorage.getItem('foundItems') || '[]');
   const lostItems = JSON.parse(localStorage.getItem('lostItems') || '[]');
   const allItems = [...foundItems, ...lostItems];
   
-  // Find item by name from localStorage or hardcoded data
-  let item = allItems.find(i => i.name === itemName);
-  
-  // Fallback to hardcoded items
-  if (!item && items[itemName]) {
-    item = items[itemName];
+  // Find item by name or id from localStorage
+  let item = null;
+  if (itemId) {
+    item = allItems.find(i => i.id == itemId);
+  }
+  if (!item && itemName) {
+    item = allItems.find(i => i.name === itemName || i.itemName === itemName);
   }
   
-  if (!itemName || !item) {
+  // Fallback to hardcoded items
+  if (!item && itemName && items[itemName]) {
+    item = items[itemName];
+    item.itemName = itemName;  // Add name for consistency
+  }
+  
+  if (!item) {
     showErrorState();
     return;
   }
   
-  // Handle both data formats
+  displayItem(item);
+}
+
+function displayItem(item) {
+  const name = item.itemName || item.name || 'Unknown Item';
+  
+  // Handle image URL - check if it's a relative path from API
+  let imageUrl = item.image || 'https://placehold.co/400x300/e5e7eb/6b7280?text=No+Image';
+  if (imageUrl && !imageUrl.startsWith('http') && !imageUrl.startsWith('data:')) {
+    imageUrl = `${API_BASE_URL}/${imageUrl}`;
+  }
+  
+  // Get color hex from color name
+  const colorHexMap = {
+    'Black': '#000000',
+    'White': '#ffffff',
+    'Red': '#dc2626',
+    'Blue': '#2563eb',
+    'Green': '#16a34a',
+    'Yellow': '#eab308',
+    'Orange': '#ea580c',
+    'Purple': '#9333ea',
+    'Pink': '#ec4899',
+    'Gray': '#6b7280',
+    'Brown': '#92400e',
+    'Silver': '#9ca3af'
+  };
+  
   const itemData = {
-    image: item.image || 'https://placehold.co/400x300/e5e7eb/6b7280?text=No+Image',
+    image: imageUrl,
     category: item.category || 'Unknown',
     location: item.location || 'Unknown',
     date: item.date || 'Unknown',
     color: item.color || 'Unknown',
-    colorHex: item.colorHex || '#6b7280',
-    match: item.match || item.confidence ? `${item.confidence}%` : '85%',
+    colorHex: item.colorHex || colorHexMap[item.color] || '#6b7280',
+    match: item.match || (item.matchScore ? `${item.matchScore}%` : (item.confidence ? `${item.confidence}%` : '85%')),
     description: item.description || 'No description available.'
   };
 
   document.getElementById("item-image").src = itemData.image;
-  document.getElementById("item-image").alt = itemName;
+  document.getElementById("item-image").alt = name;
 
-  document.getElementById("item-name").innerText = itemName;
+  document.getElementById("item-name").innerText = name;
   document.getElementById("item-category").innerText = itemData.category;
   document.getElementById("item-location").innerText = itemData.location;
-  document.getElementById("item-date").innerText = itemData.date;
+  document.getElementById("item-date").innerText = typeof itemData.date === 'string' && itemData.date.includes('T') 
+    ? new Date(itemData.date).toLocaleDateString() 
+    : itemData.date;
   document.getElementById("item-color").innerText = itemData.color;
   document.getElementById("item-description").innerText = itemData.description;
 
   document.getElementById("match-badge").innerText = `${itemData.match} Match`;
   document.getElementById("item-color-dot").style.backgroundColor = itemData.colorHex;
+  
+  // Store contact info for verification
+  if (item.contactInfo) {
+    window.itemContactInfo = item.contactInfo;
+  }
 }
 
 /* =========================
